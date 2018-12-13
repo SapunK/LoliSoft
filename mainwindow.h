@@ -5,6 +5,10 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QPixmap>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 
 class MainWindow : public QMainWindow
 {
