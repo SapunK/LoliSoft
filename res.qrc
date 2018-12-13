@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/loli_background.jpg</file>
+    </qresource>
+    <qresource prefix="/style"/>
+</RCC>
