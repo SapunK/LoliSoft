@@ -27,30 +27,22 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    main.cpp \
-    mainwindow.cpp
+        appconsts.cpp \
+    PriemNaRoba.cpp
 
 HEADERS += \
         mainwindow.h \
-    mainwindow.h \
-    mainwindow.h \
-    mainwindow.h
+        appconsts.h \
+    PriemNaRoba.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-#RESOURCES += \
-#    resources.qrc
-
 DISTFILES += \
     images/loli_background.jpg
 
 RESOURCES += \
-    res.qrc \
+    res.qrc
 

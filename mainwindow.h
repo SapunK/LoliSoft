@@ -5,6 +5,15 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QPixmap>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QLineEdit>
+#include <QGroupBox>
+#include <QTabWidget>
+
+#include "appconsts.h"
 
 class MainWindow : public QMainWindow
 {
@@ -12,14 +21,18 @@ class MainWindow : public QMainWindow
 
 public:
 
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:
 
     void setupForm();
 
-    QPushButton *pbTest;
+    QPushButton *m_pbProdazba;
+    QPushButton *m_pbMagacin;
+
+    QLineEdit *m_leSearch;
+
 };
 
 #endif // MAINWINDOW_H
