@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QLineEdit>
+#include <QGroupBox>
 
 #include "appconsts.h"
 

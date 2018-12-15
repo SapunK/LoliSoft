@@ -26,9 +26,17 @@ void MainWindow::setupForm()
 
     m_pbMagacin = new QPushButton;
     m_pbMagacin->setFixedHeight(40);
+    m_pbMagacin->setFixedWidth(250);
+    m_pbMagacin->setText(MAGACIN);
+    m_pbMagacin->setStyleSheet("font-weight:bold;");
+    m_pbMagacin->setStyleSheet("font-size:23px;");
 
     m_pbProdazba = new QPushButton;
     m_pbProdazba->setFixedHeight(40);
+    m_pbProdazba->setFixedWidth(250);
+    m_pbProdazba->setText(PRODAZBA);
+    m_pbProdazba->setStyleSheet("font-weight:bold;");
+    m_pbProdazba->setStyleSheet("font-size:23px;");
 
     //invisible label
     QLabel *invisible = new QLabel;
