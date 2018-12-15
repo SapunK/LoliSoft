@@ -1,7 +1,9 @@
-#QLabel{
+#test12{
+background-image: url(":/other/images/loli_background.jpg");
+}
+#red{
 color:red;
 }
-
-#test{
-color:blue;
+#QLabel{
+color:red;
 }

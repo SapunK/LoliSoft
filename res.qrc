@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/other">
         <file>images/loli_background.jpg</file>
-        <file>style/styles.css.txt</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>style/styles.css</file>
     </qresource>
 </RCC>

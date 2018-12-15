@@ -8,30 +8,45 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupForm()
 {
-    QFile stylesheet(":/other/style/styles.css");
-    stylesheet.open(QIODevice::ReadOnly);
-    QTextStream ts(&stylesheet);
-    setStyleSheet(ts.readAll());
-    QGridLayout *grLayout = new QGridLayout;
-
-    qDebug()<<"Error info = "<< stylesheet.errorString();
-    QLabel *loliLbl = new QLabel;
-    loliLbl->setText(tr("Лоли"));
-    loliLbl->setObjectName("test");
-
-    pbTest = new QPushButton;
-    pbTest->setText("testiranje");
-    pbTest->setObjectName("test");
-    QPixmap backgroundLoli;
-
-    pbTest->setStyleSheet("image: url(qrc:/images/images/loli_background.jpg)");
-
-    grLayout->addWidget(loliLbl, 0, 0);
-    grLayout->addWidget(pbTest, 0, 1);
-
     QWidget *mainWidget = new QWidget;
+    QGridLayout *grLayout = new QGridLayout;
+    QHBoxLayout *horLayout = new QHBoxLayout;
+//    QFile stylesheet(":/style/styles.css");
+//    stylesheet.open(QIODevice::ReadOnly);
+//    QTextStream ts(&stylesheet);
+//    mainWidget->setStyleSheet(ts.readAll());
+
+    setWindowState(Qt::WindowMaximized);
+
+    m_leSearch = new QLineEdit;
+    m_leSearch->setPlaceholderText(PLACEHOLDER_TEXT);
+    m_leSearch->setStyleSheet("font-size:23px;");
+    m_leSearch->setFixedWidth(500);
+    m_leSearch->setFixedHeight(40);
+
+    m_pbMagacin = new QPushButton;
+    m_pbMagacin->setFixedHeight(40);
+
+    m_pbProdazba = new QPushButton;
+    m_pbProdazba->setFixedHeight(40);
+
+    //invisible label
+    QLabel *invisible = new QLabel;
+    invisible->setVisible(false);
+
+    horLayout->addWidget(m_leSearch, 0, Qt::AlignTop);
+
+    grLayout->addLayout(horLayout, 0, 1);
+
+    grLayout->addWidget(m_pbMagacin, 0, 0, 1, 1, Qt::AlignTop);
+    grLayout->addWidget(m_pbProdazba, 1, 0, 1, 1, Qt::AlignTop);
+    grLayout->addWidget(invisible, 10, 0, 10, 5);
+
     mainWidget->setLayout(grLayout);
+
     setCentralWidget(mainWidget);
+    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
+
 }
 
 MainWindow::~MainWindow()

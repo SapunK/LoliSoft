@@ -9,6 +9,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QLineEdit>
+
+#include "appconsts.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,7 +26,11 @@ protected:
 
     void setupForm();
 
-    QPushButton *pbTest;
+    QPushButton *m_pbProdazba;
+    QPushButton *m_pbMagacin;
+
+    QLineEdit *m_leSearch;
+
 };
 
 #endif // MAINWINDOW_H
