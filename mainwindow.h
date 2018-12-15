@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QLineEdit>
 #include <QGroupBox>
+#include <QTabWidget>
 
 #include "appconsts.h"
 
@@ -20,7 +21,7 @@ class MainWindow : public QMainWindow
 
 public:
 
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:

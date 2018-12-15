@@ -8,11 +8,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupForm()
 {
+    QTabWidget *tabWidget = new QTabWidget;
     QWidget *mainWidget = new QWidget;
     QGridLayout *grLayout = new QGridLayout;
     QHBoxLayout *horLayout = new QHBoxLayout;
-//    QFile stylesheet(":/style/styles.css");
-//    stylesheet.open(QIODevice::ReadOnly);
+
+    tabWidget->addTab(mainWidget, "Glaven");
+    tabWidget->setTabsClosable(true);
+
+    //    QFile stylesheet(":/style/styles.css");
+    //    stylesheet.open(QIODevice::ReadOnly);
 //    QTextStream ts(&stylesheet);
 //    mainWidget->setStyleSheet(ts.readAll());
 
@@ -52,7 +57,7 @@ void MainWindow::setupForm()
 
     mainWidget->setLayout(grLayout);
 
-    setCentralWidget(mainWidget);
+    setCentralWidget(tabWidget);
     centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
 
 }
