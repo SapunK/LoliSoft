@@ -4,6 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setupForm();
+    dbConnect();
 }
 
 void MainWindow::setupForm()
@@ -60,6 +61,28 @@ void MainWindow::setupForm()
     setCentralWidget(tabWidget);
     centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
 
+}
+
+void MainWindow::dbConnect()
+{
+     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+     db.setHostName("Loli");
+     db.setDatabaseName("postgres");
+     db.setUserName("postgres");
+     db.setPassword("075692034");
+     db.setPort(5432);
+     db.driver()->open("QPSQL");
+     qDebug()<<"db driver isopen= "<<db.driver()->isOpen();
+
+     bool ok = db.open();
+
+     if(ok != true)
+     {
+         qDebug()<<"DB Connect fail";
+     }
+     else {
+         qDebug()<<"DB connect good";
+     }
 }
 
 MainWindow::~MainWindow()

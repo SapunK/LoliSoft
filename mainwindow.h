@@ -12,6 +12,9 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QTabWidget>
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
 
 #include "appconsts.h"
 
@@ -27,6 +30,7 @@ public:
 protected:
 
     void setupForm();
+    void dbConnect();
 
     QPushButton *m_pbProdazba;
     QPushButton *m_pbMagacin;
