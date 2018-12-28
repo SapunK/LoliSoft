@@ -66,17 +66,17 @@ void MainWindow::setupForm()
 void MainWindow::dbConnect()
 {
      QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
-     db.setHostName("Loli");
-     db.setDatabaseName("postgres");
+     db.setHostName("127.0.0.1");
+     db.setDatabaseName("test");
      db.setUserName("postgres");
      db.setPassword("075692034");
      db.setPort(5432);
      db.driver()->open("QPSQL");
      qDebug()<<"db driver isopen= "<<db.driver()->isOpen();
+    // qDebug()<<"Db error = "<<
+     bool oks = db.open();
 
-     bool ok = db.open();
-
-     if(ok != true)
+     if(oks != true)
      {
          qDebug()<<"DB Connect fail";
      }

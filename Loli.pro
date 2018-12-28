@@ -4,13 +4,18 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-QT       += sql
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Loli
 TEMPLATE = app
+
+#INCLUDEPATH+=C:\Program Files\PostgreSQL\10\include
+#LIBS+=C:\Program Files\PostgreSQL\10\lib\libpq.lib
+
+#PSQL_INCDIR+=C:\Program Files\PostgreSQL\10\include
+#PSQL_LIBDIR+=C:\Program Files\PostgreSQL\10\lib
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -29,12 +34,12 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         appconsts.cpp \
-    PriemNaRoba.cpp
+        PriemNaRoba.cpp
 
 HEADERS += \
         mainwindow.h \
         appconsts.h \
-    PriemNaRoba.h
+        PriemNaRoba.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -47,3 +52,4 @@ DISTFILES += \
 RESOURCES += \
     res.qrc
 
+LIBS += -L$$PWD/lib
