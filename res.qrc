@@ -1,8 +1,22 @@
 <RCC>
     <qresource prefix="/other">
         <file>images/loli_background.jpg</file>
+        <file>images/loli_background-old.jpg</file>
     </qresource>
     <qresource prefix="/">
         <file>style/styles.css</file>
+        <file>lib/libeay32.dll</file>
+        <file>lib/libiconv-2.dll</file>
+        <file>lib/libintl-8.dll</file>
+        <file>lib/libpq.dll</file>
+        <file>lib/ssleay32.dll</file>
+        <file>lib/zlib1.dll</file>
+        <file>appconsts.cpp</file>
+        <file>appconsts.h</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
+        <file>PriemNaRoba.cpp</file>
+        <file>PriemNaRoba.h</file>
     </qresource>
 </RCC>
