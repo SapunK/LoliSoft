@@ -37,6 +37,9 @@ protected:
 
     QLineEdit *m_leSearch;
 
+public slots:
+    void slotMagacinClicked();
+
 };
 
 #endif // MAINWINDOW_H

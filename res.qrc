@@ -16,7 +16,5 @@
         <file>main.cpp</file>
         <file>mainwindow.cpp</file>
         <file>mainwindow.h</file>
-        <file>PriemNaRoba.cpp</file>
-        <file>PriemNaRoba.h</file>
     </qresource>
 </RCC>

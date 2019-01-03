@@ -11,12 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Loli
 TEMPLATE = app
 
-#INCLUDEPATH+=C:\Program Files\PostgreSQL\10\include
-#LIBS+=C:\Program Files\PostgreSQL\10\lib\libpq.lib
-
-#PSQL_INCDIR+=C:\Program Files\PostgreSQL\10\include
-#PSQL_LIBDIR+=C:\Program Files\PostgreSQL\10\lib
-
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -34,12 +28,12 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         appconsts.cpp \
-        PriemNaRoba.cpp
+    Magacin.cpp
 
 HEADERS += \
         mainwindow.h \
         appconsts.h \
-        PriemNaRoba.h
+    Magacin.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
