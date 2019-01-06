@@ -5,6 +5,9 @@ const char* SEARCH_PLACEHOLDER_TEXT = QT_TR_NOOP("Пребарувај по ши
 const char* MAGACIN = QT_TR_NOOP("Магацин");
 const char* PRODAZBA = QT_TR_NOOP("Продажба");
 const char* POCETNA = QT_TR_NOOP("Почетна");
+const char* NOV = QT_TR_NOOP("Нов");
+const char* PROMENI = QT_TR_NOOP("Промени");
+const char* IZBRISI = QT_TR_NOOP("Избриши");
 
 ///MAGACIN
 
@@ -23,6 +26,8 @@ const int SEARCHLE_FIXEDHEIGHT = 40;
 const char* SEARCHLE_FONTSIZE = "font-size:23px;";
 
 const char* FONT_WEIGHT_BOLD = "font-weight:bold;";
+
+const int SMALLPB_FIXEDWIDTH = 100;
 
 
 

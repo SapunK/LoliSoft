@@ -8,9 +8,13 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QRadioButton>
+#include <QSqlQueryModel>
+#include <QSqlQuery>
+#include <QTableView>
+#include <QShortcut>
+#include <QDebug>
 
 #include <appconsts.h>
-
 class Magacin : public QDialog
 {
     Q_OBJECT
@@ -23,10 +27,21 @@ protected:
     QPushButton *m_pbModeli;
     QPushButton *m_pbMaterijali;
 
+    QPushButton *m_nov;
+    QPushButton *m_promeni;
+    QPushButton *m_izbrishi;
+
     QLineEdit *m_leSearch;
+
+    QSqlQueryModel *m_model;
+    QTableView *m_table;
 signals:
 
 public slots:
+    void slotBoiClicked();
+    void slotModeliClicked();
+    void slotMaterijaliClicked();
+    void slotSearchLE();
 };
 
 #endif // MAGACIN_H

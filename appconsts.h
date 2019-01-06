@@ -5,6 +5,9 @@ extern const char* SEARCH_PLACEHOLDER_TEXT;
 extern const char* MAGACIN;
 extern const char* PRODAZBA;
 extern const char* POCETNA;
+extern const char* NOV;
+extern const char* PROMENI;
+extern const char* IZBRISI;
 
 ///MAGACIN
 
@@ -16,6 +19,7 @@ extern const char* MODELI;
 
 extern const int PB_FIXEDHEIGHT;
 extern const int PB_FIXEDWIDTH;
+extern const int SMALLPB_FIXEDWIDTH;
 extern const char* PB_FONTSIZE;
 
 extern const int SEARCHLE_FIXEDWIDTH;

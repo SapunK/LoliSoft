@@ -72,7 +72,7 @@ void MainWindow::dbConnect()
 {
      QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
      db.setHostName("127.0.0.1");
-     db.setDatabaseName("test");
+     db.setDatabaseName("lolisoft");
      db.setUserName("postgres");
      db.setPassword("075692034");
      db.setPort(5432);
