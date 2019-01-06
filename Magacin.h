@@ -15,6 +15,15 @@
 #include <QDebug>
 
 #include <appconsts.h>
+
+namespace MagacinNS{
+enum lastClicked{
+    obuvki,
+    boi,
+    materijali,
+    modeli
+};
+}
 class Magacin : public QDialog
 {
     Q_OBJECT
@@ -23,6 +32,9 @@ public:
 
 protected:
     void setupForm();
+
+    int poslednoKliknato;
+
     QPushButton *m_pbBoi;
     QPushButton *m_pbModeli;
     QPushButton *m_pbMaterijali;
@@ -42,6 +54,7 @@ public slots:
     void slotModeliClicked();
     void slotMaterijaliClicked();
     void slotSearchLE();
+    void slotNovClicked();
 };
 
 #endif // MAGACIN_H

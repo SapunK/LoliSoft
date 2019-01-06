@@ -8,6 +8,8 @@ const char* POCETNA = QT_TR_NOOP("Почетна");
 const char* NOV = QT_TR_NOOP("Нов");
 const char* PROMENI = QT_TR_NOOP("Промени");
 const char* IZBRISI = QT_TR_NOOP("Избриши");
+const char* DODADI = QT_TR_NOOP("Додади");
+const char* ZATVORI = QT_TR_NOOP("Затвори");
 
 ///MAGACIN
 

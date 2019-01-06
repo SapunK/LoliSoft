@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         appconsts.cpp \
-    Magacin.cpp
+    Magacin.cpp \
+    Boi_Box.cpp
 
 HEADERS += \
         mainwindow.h \
         appconsts.h \
-    Magacin.h
+    Magacin.h \
+    Boi_Box.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

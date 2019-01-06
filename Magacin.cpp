@@ -1,9 +1,13 @@
 #include "Magacin.h"
+#include "Boi_Box.h"
 
+using namespace MagacinNS;
 Magacin::Magacin(QDialog *parent) : QDialog(parent)
 {
+    setWindowTitle("Магацин");
     setupForm();
-    setFixedSize(1000, 300);
+    setFixedSize(1000, 600);
+    poslednoKliknato = obuvki;
 
     connect(m_pbBoi, SIGNAL(clicked(bool)), this, SLOT(slotBoiClicked()));
     connect(m_pbModeli, SIGNAL(clicked(bool)), this, SLOT(slotModeliClicked()));
@@ -68,6 +72,7 @@ void Magacin::setupForm()
 
 void Magacin::slotBoiClicked()
 {
+    poslednoKliknato = boi;
     QSqlQuery modelQuery("SELECT sifra, boja FROM boi");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
@@ -81,6 +86,7 @@ void Magacin::slotBoiClicked()
 
 void Magacin::slotModeliClicked()
 {
+    poslednoKliknato = modeli;
     QSqlQuery modelQuery("SELECT sifra, model FROM modeli");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
@@ -94,6 +100,7 @@ void Magacin::slotModeliClicked()
 
 void Magacin::slotMaterijaliClicked()
 {
+    poslednoKliknato = materijali;
     QSqlQuery modelQuery("SELECT sifra, materijal FROM materijali");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
@@ -109,6 +116,11 @@ void Magacin::slotSearchLE()
 {
     if(m_leSearch->hasFocus())
     {
+        m_nov->setText("Нова");
+        m_nov->setHidden(false);
+        m_promeni->setHidden(false);
+        m_izbrishi->setHidden(false);
+        poslednoKliknato = obuvki;
         //Ako search e prazno selektiraj gi site
         if(m_leSearch->text().isEmpty())
         {
@@ -153,4 +165,9 @@ void Magacin::slotSearchLE()
         m_model->setHeaderData(6, Qt::Horizontal, "Лагер");
 
     }
+}
+
+void Magacin::slotNovClicked()
+{
+
 }

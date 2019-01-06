@@ -8,6 +8,8 @@ extern const char* POCETNA;
 extern const char* NOV;
 extern const char* PROMENI;
 extern const char* IZBRISI;
+extern const char* DODADI;
+extern const char* ZATVORI;
 
 ///MAGACIN
 
