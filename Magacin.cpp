@@ -139,8 +139,8 @@ void Magacin::slotSearchLE()
             else
             {
                 QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
-                                           " WHERE OR boja = '%1' OR"
-                                           " materijal = '%1' OR model= '%1'").arg(searchText));
+                                           " WHERE boja ilike '%%1%' OR"
+                                           " materijal ilike '%%1%' OR model ilike '%%1%'").arg(searchText));
                 m_model->setQuery(modelQuery);
             }
         }

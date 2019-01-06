@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     dbConnect();
 
     connect(m_pbMagacin,SIGNAL(clicked(bool)),this, SLOT(slotMagacinClicked()));
+    QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
+    connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearchLE()));
 }
 
 void MainWindow::setupForm()
@@ -49,6 +51,18 @@ void MainWindow::setupForm()
     m_pbProdazba->setStyleSheet(FONT_WEIGHT_BOLD);
     m_pbProdazba->setStyleSheet(PB_FONTSIZE);
 
+    m_model = new QSqlQueryModel;
+    m_table = new QTableView;
+    m_table->setModel(m_model);
+
+    m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
+    m_model->setHeaderData(1, Qt::Horizontal, "Боја");
+    m_model->setHeaderData(2, Qt::Horizontal, "Материјал");
+    m_model->setHeaderData(3, Qt::Horizontal, "Модел");
+    m_model->setHeaderData(4, Qt::Horizontal, "Број");
+    m_model->setHeaderData(5, Qt::Horizontal, "Цена");
+    m_model->setHeaderData(6, Qt::Horizontal, "Лагер");
+
     //invisible label
     QLabel *invisible = new QLabel;
     invisible->setVisible(false);
@@ -59,13 +73,56 @@ void MainWindow::setupForm()
 
     grLayout->addWidget(m_pbMagacin, 0, 0, 1, 1, Qt::AlignTop);
     grLayout->addWidget(m_pbProdazba, 1, 0, 1, 1, Qt::AlignTop);
+    grLayout->addWidget(m_table, 2, 1);
     grLayout->addWidget(invisible, 10, 0, 10, 5);
 
     mainWidget->setLayout(grLayout);
 
     setCentralWidget(tabWidget);
-    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
+//    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
 
+}
+
+void MainWindow::slotSearchLE()
+{
+    if(m_leSearch->hasFocus())
+    {
+        //Ako search e prazno selektiraj gi site
+        if(m_leSearch->text().isEmpty())
+        {
+            QSqlQuery modelQuery("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki");
+            m_model->setQuery(modelQuery);
+        }
+        //ako ne e prazno filtriraj
+        else
+        {
+            bool madeOfNumbers;
+            QString searchText = m_leSearch->text();
+            for(int i = 0 ; i < searchText.length() ; i++)
+            {
+                if(searchText[i].isDigit())
+                {
+                    madeOfNumbers = true;
+                    break;
+                }
+            }
+            //dokolku search se brojki togash selektiraj po sifra i broj
+            if(madeOfNumbers)
+            {
+                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
+                                           " WHERE sifra = %1 OR broj=%1").arg(searchText));
+                m_model->setQuery(modelQuery);
+            }
+            //ako e string togash selektiraj spored ostanato
+            else
+            {
+                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
+                                           " WHERE boja ilike '%%1%' OR"
+                                           " materijal ilike '%%1%' OR model ilike '%%1%'").arg(searchText));
+                m_model->setQuery(modelQuery);
+            }
+        }
+    }
 }
 
 void MainWindow::dbConnect()

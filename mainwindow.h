@@ -15,6 +15,9 @@
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
+#include <QSqlQueryModel>
+#include <QTableView>
+#include <QShortcut>
 
 #include "appconsts.h"
 
@@ -35,10 +38,14 @@ protected:
     QPushButton *m_pbProdazba;
     QPushButton *m_pbMagacin;
 
+    QSqlQueryModel *m_model;
+    QTableView *m_table;
+
     QLineEdit *m_leSearch;
 
 public slots:
     void slotMagacinClicked();
+    void slotSearchLE();
 
 };
 
