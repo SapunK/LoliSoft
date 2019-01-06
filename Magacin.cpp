@@ -3,7 +3,7 @@
 Magacin::Magacin(QDialog *parent) : QDialog(parent)
 {
     setupForm();
-    setFixedSize(800, 250);
+    setFixedSize(1000, 300);
 
     connect(m_pbBoi, SIGNAL(clicked(bool)), this, SLOT(slotBoiClicked()));
     connect(m_pbModeli, SIGNAL(clicked(bool)), this, SLOT(slotModeliClicked()));
@@ -40,6 +40,7 @@ void Magacin::setupForm()
     m_model = new QSqlQueryModel(this);
     m_table = new QTableView(this);
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table->setModel(m_model);
 
     m_nov = new QPushButton(NOV);
     m_nov->setFixedWidth(SMALLPB_FIXEDWIDTH);
@@ -71,7 +72,6 @@ void Magacin::slotBoiClicked()
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Боја");
-    m_table->setModel(m_model);
 
     m_nov->setText(tr("Нова"));
     m_nov->setHidden(false);
@@ -85,7 +85,6 @@ void Magacin::slotModeliClicked()
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Модел");
-    m_table->setModel(m_model);
 
     m_nov->setText(NOV);
     m_nov->setHidden(false);
@@ -99,7 +98,6 @@ void Magacin::slotMaterijaliClicked()
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Материјал");
-    m_table->setModel(m_model);
 
     m_nov->setText(NOV);
     m_nov->setHidden(false);
@@ -111,6 +109,48 @@ void Magacin::slotSearchLE()
 {
     if(m_leSearch->hasFocus())
     {
-        qDebug()<<"Focus";
+        //Ako search e prazno selektiraj gi site
+        if(m_leSearch->text().isEmpty())
+        {
+            QSqlQuery modelQuery("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki");
+            m_model->setQuery(modelQuery);
+        }
+        //ako ne e prazno filtriraj
+        else
+        {
+            bool madeOfNumbers;
+            QString searchText = m_leSearch->text();
+            for(int i = 0 ; i < searchText.length() ; i++)
+            {
+                if(searchText[i].isDigit())
+                {
+                    madeOfNumbers = true;
+                    break;
+                }
+            }
+            //dokolku search se brojki togash selektiraj po sifra i broj
+            if(madeOfNumbers)
+            {
+                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
+                                           " WHERE sifra = %1 OR broj=%1").arg(searchText));
+                m_model->setQuery(modelQuery);
+            }
+            //ako e string togash selektiraj spored ostanato
+            else
+            {
+                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
+                                           " WHERE OR boja = '%1' OR"
+                                           " materijal = '%1' OR model= '%1'").arg(searchText));
+                m_model->setQuery(modelQuery);
+            }
+        }
+        m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
+        m_model->setHeaderData(1, Qt::Horizontal, "Боја");
+        m_model->setHeaderData(2, Qt::Horizontal, "Материјал");
+        m_model->setHeaderData(3, Qt::Horizontal, "Модел");
+        m_model->setHeaderData(4, Qt::Horizontal, "Број");
+        m_model->setHeaderData(5, Qt::Horizontal, "Цена");
+        m_model->setHeaderData(6, Qt::Horizontal, "Лагер");
+
     }
 }
