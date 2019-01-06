@@ -29,10 +29,27 @@ void Boi_Box::setupForm()
 
 void Boi_Box::slotDodadiClicked()
 {
-
+    if(m_leBoja->text().trimmed().isEmpty())
+    {
+        QMessageBox::information(this, "Празно поле", "Полето за боја е празно, прво внесете\n"
+                                                      " нешто во полето, потоа стиснете додади");
+    }
+    else
+    {
+        QString queryString = QString("INSERT INTO boi (boja) VALUES('%1')").arg(m_leBoja->text());
+        QSqlQuery query;
+        if(query.exec(queryString))
+        {
+            QMessageBox::information(this, "Успешно", "Успешно внесена боја");
+        }
+        else
+        {
+            QMessageBox::critical(this, "Грешка", QString("Се случи грешка при внесување\n"
+                                                  "'%1'").arg(query.lastQuery()));
+        }
+    }
 }
-
 void Boi_Box::slotZatvoriClicked()
 {
-
+    reject();
 }

@@ -14,6 +14,7 @@ Magacin::Magacin(QDialog *parent) : QDialog(parent)
     connect(m_pbMaterijali, SIGNAL(clicked(bool)), this, SLOT(slotMaterijaliClicked()));
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
     connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearchLE()));
+    connect(m_nov, SIGNAL(clicked(bool)), this, SLOT(slotNovClicked()));
 }
 
 void Magacin::setupForm()
@@ -169,5 +170,21 @@ void Magacin::slotSearchLE()
 
 void Magacin::slotNovClicked()
 {
+    switch(poslednoKliknato)
+    {
+    case obuvki:
+    break;
 
+    case boi:
+    Boi_Box *boiB = new Boi_Box;
+    boiB->show();
+    break;
+
+//    case materijali:
+//    break;
+
+//    case modeli:
+//    break;
+
+    }
 }

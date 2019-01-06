@@ -9,6 +9,7 @@
 #include <QSqlQuery>
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QSqlError>
 
 class Boi_Box : public QDialog
 {
