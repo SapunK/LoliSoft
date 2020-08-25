@@ -25,17 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    Colors_Box.cpp \
+    Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
-        appconsts.cpp \
-    Magacin.cpp \
-    Boi_Box.cpp
+        appconsts.cpp
 
 HEADERS += \
+    Colors_Box.h \
+    Warehouse.h \
         mainwindow.h \
-        appconsts.h \
-    Magacin.h \
-    Boi_Box.h
+        appconsts.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -2,24 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGridLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QPixmap>
-#include <QFile>
-#include <QTextStream>
-#include <QDebug>
-#include <QLineEdit>
-#include <QGroupBox>
-#include <QTabWidget>
-#include <QtSql/QSql>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlDriver>
-#include <QSqlQueryModel>
-#include <QTableView>
-#include <QShortcut>
 
-#include "appconsts.h"
+class QPushButton;
+class QSqlQueryModel;
+class QTableView;
+class QLineEdit;
 
 class MainWindow : public QMainWindow
 {
@@ -35,8 +22,8 @@ protected:
     void setupForm();
     void dbConnect();
 
-    QPushButton *m_pbProdazba;
-    QPushButton *m_pbMagacin;
+    QPushButton *m_pbSell;
+    QPushButton *m_pbWarehouse;
 
     QSqlQueryModel *m_model;
     QTableView *m_table;
@@ -45,7 +32,7 @@ protected:
 
 public slots:
     void slotMagacinClicked();
-    void slotSearchLE();
+    void slotSearch();
 
 };
 

@@ -11,11 +11,11 @@
 #include <QMessageBox>
 #include <QSqlError>
 
-class Boi_Box : public QDialog
+class Colors_Box : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Boi_Box(QDialog *parent = nullptr);
+    explicit Colors_Box(QDialog *parent = nullptr);
 protected:
     void setupForm();
 

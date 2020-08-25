@@ -1,17 +1,33 @@
 #include "mainwindow.h"
-#include "Magacin.h"
 
-//class Magacin;
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+#include <QTableView>
+#include <QDebug>
+#include <QShortcut>
+
+#include "Warehouse.h"
+#include "appconsts.h"
+
+namespace MainWindow_NS {
+
+}
+
+using namespace MainWindow_NS;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setupForm();
     dbConnect();
+    setupForm();
 
-    connect(m_pbMagacin,SIGNAL(clicked(bool)),this, SLOT(slotMagacinClicked()));
+    connect(m_pbWarehouse,&QAbstractButton::clicked,this, &MainWindow::slotMagacinClicked);
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
-    connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearchLE()));
+    connect(searchShortcut, &QShortcut::activated, this, &MainWindow::slotSearch);
 }
 
 void MainWindow::setupForm()
@@ -37,19 +53,19 @@ void MainWindow::setupForm()
     m_leSearch->setFixedWidth(SEARCHLE_FIXEDWIDTH);
     m_leSearch->setFixedHeight(SEARCHLE_FIXEDHEIGHT);
 
-    m_pbMagacin = new QPushButton;
-    m_pbMagacin->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbMagacin->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbMagacin->setText(MAGACIN);
-    m_pbMagacin->setStyleSheet(FONT_WEIGHT_BOLD);
-    m_pbMagacin->setStyleSheet(PB_FONTSIZE);
+    m_pbWarehouse = new QPushButton;
+    m_pbWarehouse->setFixedHeight(PB_FIXEDHEIGHT);
+    m_pbWarehouse->setFixedWidth(PB_FIXEDWIDTH);
+    m_pbWarehouse->setText(MAGACIN);
+    m_pbWarehouse->setStyleSheet(FONT_WEIGHT_BOLD);
+    m_pbWarehouse->setStyleSheet(PB_FONTSIZE);
 
-    m_pbProdazba = new QPushButton;
-    m_pbProdazba->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbProdazba->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbProdazba->setText(PRODAZBA);
-    m_pbProdazba->setStyleSheet(FONT_WEIGHT_BOLD);
-    m_pbProdazba->setStyleSheet(PB_FONTSIZE);
+    m_pbSell = new QPushButton;
+    m_pbSell->setFixedHeight(PB_FIXEDHEIGHT);
+    m_pbSell->setFixedWidth(PB_FIXEDWIDTH);
+    m_pbSell->setText(PRODAZBA);
+    m_pbSell->setStyleSheet(FONT_WEIGHT_BOLD);
+    m_pbSell->setStyleSheet(PB_FONTSIZE);
 
     m_model = new QSqlQueryModel;
     m_table = new QTableView;
@@ -71,19 +87,21 @@ void MainWindow::setupForm()
 
     grLayout->addLayout(horLayout, 0, 1);
 
-    grLayout->addWidget(m_pbMagacin, 0, 0, 1, 1, Qt::AlignTop);
-    grLayout->addWidget(m_pbProdazba, 1, 0, 1, 1, Qt::AlignTop);
+    grLayout->addWidget(m_pbWarehouse, 0, 0, 1, 1, Qt::AlignTop);
+    grLayout->addWidget(m_pbSell, 1, 0, 1, 1, Qt::AlignTop);
     grLayout->addWidget(m_table, 2, 1);
     grLayout->addWidget(invisible, 10, 0, 10, 5);
 
     mainWidget->setLayout(grLayout);
 
-    setCentralWidget(tabWidget);
+//    setCentralWidget(tabWidget);
+    setCentralWidget(mainWidget);
+    mainWidget->show();
 //    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
 
 }
 
-void MainWindow::slotSearchLE()
+void MainWindow::slotSearch()
 {
     if(m_leSearch->hasFocus())
     {
@@ -129,9 +147,9 @@ void MainWindow::dbConnect()
 {
      QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
      db.setHostName("127.0.0.1");
-     db.setDatabaseName("lolisoft");
+     db.setDatabaseName("shoestore");
      db.setUserName("postgres");
-     db.setPassword("075692034");
+     db.setPassword("postgres");
      db.setPort(5432);
 
      bool oks = db.open();
@@ -147,7 +165,7 @@ void MainWindow::dbConnect()
 
 void MainWindow::slotMagacinClicked()
 {
-    Magacin *mag = new Magacin;
+    Warehouse *mag = new Warehouse;
     mag->show();
 
 }

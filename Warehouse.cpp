@@ -1,41 +1,48 @@
-#include "Magacin.h"
-#include "Boi_Box.h"
+#include "Warehouse.h"
 
-using namespace MagacinNS;
-Magacin::Magacin(QDialog *parent) : QDialog(parent)
+#include <QShortcut>
+#include <QPushButton>
+#include <QSqlQueryModel>
+#include <QTableView>
+
+#include "Colors_Box.h"
+#include "appconsts.h"
+
+using namespace Warehouse_NS;
+Warehouse::Warehouse(QDialog *parent) : QDialog(parent)
 {
-    setWindowTitle("Магацин");
+    setWindowTitle(MAGACIN);
     setupForm();
     setFixedSize(1000, 600);
-    poslednoKliknato = obuvki;
+    lastClicked = shoes;
 
-    connect(m_pbBoi, SIGNAL(clicked(bool)), this, SLOT(slotBoiClicked()));
-    connect(m_pbModeli, SIGNAL(clicked(bool)), this, SLOT(slotModeliClicked()));
-    connect(m_pbMaterijali, SIGNAL(clicked(bool)), this, SLOT(slotMaterijaliClicked()));
+    connect(m_pbColors, SIGNAL(clicked(bool)), this, SLOT(slotColorsClicked()));
+    connect(m_pbModels, SIGNAL(clicked(bool)), this, SLOT(slotModelsClicked()));
+    connect(m_pbMaterials, SIGNAL(clicked(bool)), this, SLOT(slotMaterialsClicked()));
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
-    connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearchLE()));
-    connect(m_nov, SIGNAL(clicked(bool)), this, SLOT(slotNovClicked()));
+    connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearch()));
+    connect(m_pbNew, SIGNAL(clicked(bool)), this, SLOT(slotNewClicked()));
 }
 
-void Magacin::setupForm()
+void Warehouse::setupForm()
 {
     QGridLayout *mainLayout = new QGridLayout(this);
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
 
-    m_pbBoi = new QPushButton(BOI, this);
-    m_pbBoi->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbBoi->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbBoi->setStyleSheet(PB_FONTSIZE);
+    m_pbColors = new QPushButton(BOI, this);
+    m_pbColors->setFixedWidth(PB_FIXEDWIDTH);
+    m_pbColors->setFixedHeight(PB_FIXEDHEIGHT);
+    m_pbColors->setStyleSheet(PB_FONTSIZE);
 
-    m_pbModeli = new QPushButton(MODELI, this);
-    m_pbModeli->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbModeli->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbModeli->setStyleSheet(PB_FONTSIZE);
+    m_pbModels = new QPushButton(MODELI, this);
+    m_pbModels->setFixedWidth(PB_FIXEDWIDTH);
+    m_pbModels->setFixedHeight(PB_FIXEDHEIGHT);
+    m_pbModels->setStyleSheet(PB_FONTSIZE);
 
-    m_pbMaterijali = new QPushButton(MATERIJALI, this);
-    m_pbMaterijali->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbMaterijali->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbMaterijali->setStyleSheet(PB_FONTSIZE);
+    m_pbMaterials = new QPushButton(MATERIJALI, this);
+    m_pbMaterials->setFixedWidth(PB_FIXEDWIDTH);
+    m_pbMaterials->setFixedHeight(PB_FIXEDHEIGHT);
+    m_pbMaterials->setStyleSheet(PB_FONTSIZE);
 
     m_leSearch = new QLineEdit(this);
     m_leSearch->setPlaceholderText(SEARCH_PLACEHOLDER_TEXT);
@@ -47,81 +54,81 @@ void Magacin::setupForm()
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->setModel(m_model);
 
-    m_nov = new QPushButton(NOV);
-    m_nov->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_nov->setHidden(true);
+    m_pbNew = new QPushButton(NOV);
+    m_pbNew->setFixedWidth(SMALLPB_FIXEDWIDTH);
+    m_pbNew->setHidden(true);
 
-    m_promeni = new QPushButton(PROMENI);
-    m_promeni->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_promeni->setHidden(true);
+    m_pbChange = new QPushButton(PROMENI);
+    m_pbChange->setFixedWidth(SMALLPB_FIXEDWIDTH);
+    m_pbChange->setHidden(true);
 
-    m_izbrishi = new QPushButton(IZBRISI);
-    m_izbrishi->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_izbrishi->setHidden(true);
+    m_pbDelete = new QPushButton(IZBRISI);
+    m_pbDelete->setFixedWidth(SMALLPB_FIXEDWIDTH);
+    m_pbDelete->setHidden(true);
 
-    buttonsLayout->addWidget(m_nov);
-    buttonsLayout->addWidget(m_promeni);
-    buttonsLayout->addWidget(m_izbrishi);
+    buttonsLayout->addWidget(m_pbNew);
+    buttonsLayout->addWidget(m_pbChange);
+    buttonsLayout->addWidget(m_pbDelete);
 
-    mainLayout->addWidget(m_pbBoi, 0, 0);
-    mainLayout->addWidget(m_pbModeli, 0, 1);
-    mainLayout->addWidget(m_pbMaterijali, 0, 2);
+    mainLayout->addWidget(m_pbColors, 0, 0);
+    mainLayout->addWidget(m_pbModels, 0, 1);
+    mainLayout->addWidget(m_pbMaterials, 0, 2);
     mainLayout->addWidget(m_leSearch, 1, 0, 1, 3);
     mainLayout->addLayout(buttonsLayout, 2, 0);
     mainLayout->addWidget(m_table, 3, 0, 1, 3);
 }
 
-void Magacin::slotBoiClicked()
+void Warehouse::slotColorsClicked()
 {
-    poslednoKliknato = boi;
+    lastClicked = colors;
     QSqlQuery modelQuery("SELECT sifra, boja FROM boi");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Боја");
 
-    m_nov->setText(tr("Нова"));
-    m_nov->setHidden(false);
-    m_promeni->setHidden(false);
-    m_izbrishi->setHidden(false);
+    m_pbNew->setText(tr("Нова"));
+    m_pbNew->setHidden(false);
+    m_pbChange->setHidden(false);
+    m_pbDelete->setHidden(false);
 }
 
-void Magacin::slotModeliClicked()
+void Warehouse::slotModelsClicked()
 {
-    poslednoKliknato = modeli;
+    lastClicked = models;
     QSqlQuery modelQuery("SELECT sifra, model FROM modeli");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Модел");
 
-    m_nov->setText(NOV);
-    m_nov->setHidden(false);
-    m_promeni->setHidden(false);
-    m_izbrishi->setHidden(false);
+    m_pbNew->setText(NOV);
+    m_pbNew->setHidden(false);
+    m_pbChange->setHidden(false);
+    m_pbDelete->setHidden(false);
 }
 
-void Magacin::slotMaterijaliClicked()
+void Warehouse::slotMaterialsClicked()
 {
-    poslednoKliknato = materijali;
+    lastClicked = materials;
     QSqlQuery modelQuery("SELECT sifra, materijal FROM materijali");
     m_model->setQuery(modelQuery);
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Материјал");
 
-    m_nov->setText(NOV);
-    m_nov->setHidden(false);
-    m_promeni->setHidden(false);
-    m_izbrishi->setHidden(false);
+    m_pbNew->setText(NOV);
+    m_pbNew->setHidden(false);
+    m_pbChange->setHidden(false);
+    m_pbDelete->setHidden(false);
 }
 
-void Magacin::slotSearchLE()
+void Warehouse::slotSearch()
 {
     if(m_leSearch->hasFocus())
     {
-        m_nov->setText("Нова");
-        m_nov->setHidden(false);
-        m_promeni->setHidden(false);
-        m_izbrishi->setHidden(false);
-        poslednoKliknato = obuvki;
+        m_pbNew->setText("Нова");
+        m_pbNew->setHidden(false);
+        m_pbChange->setHidden(false);
+        m_pbDelete->setHidden(false);
+        lastClicked = shoes;
         //Ako search e prazno selektiraj gi site
         if(m_leSearch->text().isEmpty())
         {
@@ -168,15 +175,15 @@ void Magacin::slotSearchLE()
     }
 }
 
-void Magacin::slotNovClicked()
+void Warehouse::slotNewClicked()
 {
-    switch(poslednoKliknato)
+    switch(lastClicked)
     {
-    case obuvki:
+    case shoes:
     break;
 
-    case boi:
-    Boi_Box *boiB = new Boi_Box;
+    case colors:
+    Colors_Box *boiB = new Colors_Box;
     boiB->show();
     break;
 

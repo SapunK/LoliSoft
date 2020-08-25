@@ -1,15 +1,16 @@
-#include "Boi_Box.h"
+#include "Colors_Box.h"
+
 #include "appconsts.h"
 
-Boi_Box::Boi_Box(QDialog *parent) : QDialog(parent)
+Colors_Box::Colors_Box(QDialog *parent) : QDialog(parent)
 {
-    setWindowTitle("Бои");
+    setWindowTitle("Colors");
     setupForm();
     connect(m_dodadi, SIGNAL(clicked(bool)), this, SLOT(slotDodadiClicked()));
     connect(m_zatvori, SIGNAL(clicked(bool)), this, SLOT(slotZatvoriClicked()));
 }
 
-void Boi_Box::setupForm()
+void Colors_Box::setupForm()
 {
     m_leBoja = new QLineEdit(this);
     m_leBoja->setPlaceholderText("Внеси боја");
@@ -27,7 +28,7 @@ void Boi_Box::setupForm()
     mainLayout->addWidget(m_zatvori, 1, 1, 1, 1);
 }
 
-void Boi_Box::slotDodadiClicked()
+void Colors_Box::slotDodadiClicked()
 {
     if(m_leBoja->text().trimmed().isEmpty())
     {
@@ -49,7 +50,7 @@ void Boi_Box::slotDodadiClicked()
         }
     }
 }
-void Boi_Box::slotZatvoriClicked()
+void Colors_Box::slotZatvoriClicked()
 {
     reject();
 }
