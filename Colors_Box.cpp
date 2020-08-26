@@ -15,13 +15,13 @@ static const char* SEARCH_COLORS_PLACEHOLDER = "Search by color";
 
 using namespace Colors_Box_NS;
 
-Colors_Box::Colors_Box(QDialog *parent)
+Colors_Box::Colors_Box(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(COLORS);
     setupForm();
-    connect(m_pbNew, &QAbstractButton::clicked, this, &Colors_Box::slotDodadiClicked);
-    connect(m_pbClose, &QAbstractButton::clicked, this, &Colors_Box::slotZatvoriClicked);
+    connect(m_pbNew, &QAbstractButton::clicked, this, &Colors_Box::newClicked);
+    connect(m_pbClose, &QAbstractButton::clicked, this, &Colors_Box::closeClicked);
 }
 
 void Colors_Box::setupForm()
@@ -39,7 +39,7 @@ void Colors_Box::setupForm()
     mainLayout->addWidget(m_pbClose, 1, 1, 1, 1);
 }
 
-void Colors_Box::slotDodadiClicked()
+void Colors_Box::newClicked()
 {
     if(m_leColor->text().trimmed().isEmpty())
     {
@@ -61,7 +61,7 @@ void Colors_Box::slotDodadiClicked()
         }
     }
 }
-void Colors_Box::slotZatvoriClicked()
+void Colors_Box::closeClicked()
 {
     reject();
 }

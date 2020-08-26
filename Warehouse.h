@@ -24,7 +24,7 @@ class Warehouse : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Warehouse(QDialog *parent = nullptr);
+    explicit Warehouse(QWidget *parent = nullptr);
 
 protected:
     void setupForm();

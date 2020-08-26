@@ -8,15 +8,15 @@
 #include <QSqlQuery>
 
 #include "appconsts.h"
+#include "HelperFunctions.h"
 
 using namespace Warehouse_NS;
-Warehouse::Warehouse(QDialog *parent)
+Warehouse::Warehouse(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(WAREHOUSE);
     setupForm();
-    //TODO use screenGeometry to set the size
-    setFixedSize(1000, 600);
+    setFixedSize(HelperFunctions::desktopWidth() * 0.5, HelperFunctions::desktopHeight() * 0.4);
 
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
     connect(searchShortcut, &QShortcut::activated, this, &Warehouse::slotSearch);
@@ -27,7 +27,7 @@ void Warehouse::setupForm()
     QGridLayout *mainLayout = new QGridLayout(this);
 
     m_leSearch = new QLineEdit(this);
-    m_leSearch->setStyleSheet(SEARCHLE_FONTSIZE);
+    HelperFunctions::setWidgetProperties(*m_leSearch);
 
     m_model = new QSqlQueryModel(this);
     m_table = new QTableView(this);

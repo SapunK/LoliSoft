@@ -10,13 +10,10 @@
 #include <QDebug>
 #include <QShortcut>
 
-#include <QDesktopWidget>
-#include <QApplication>
-#include <QGuiApplication>
-
 #include "Warehouse.h"
 #include "Colors_Box.h"
 #include "appconsts.h"
+#include "HelperFunctions.h"
 
 namespace MainWindow_NS {
 
@@ -31,18 +28,28 @@ MainWindow::MainWindow(QWidget *parent)
     dbConnect();
     setupForm();
 
-    connect(m_pbWarehouse,&QAbstractButton::clicked,this, &MainWindow::slotMagacinClicked);
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
     connect(searchShortcut, &QShortcut::activated, this, &MainWindow::slotSearch);
+
+    connect(m_pbColors, &QAbstractButton::clicked, this, [this](){
+       Colors_Box *box = new Colors_Box(m_mainWidget);
+       box->show();
+    });
+    connect(m_pbWarehouse, &QAbstractButton::clicked, this, [this](){
+        Warehouse *box = new Warehouse(this);
+        box->show();
+    });
 }
 
 void MainWindow::setupForm()
 {
 //    QTabWidget *tabWidget = new QTabWidget;
-    QWidget *mainWidget = new QWidget;
+    m_mainWidget = new QWidget;
     QHBoxLayout *mainLayout = new QHBoxLayout;
     QVBoxLayout *vLayoutButtons = new QVBoxLayout;
     QVBoxLayout *vLayoutTable = new QVBoxLayout;
+
+    HelperFunctions::setDesktopSize();
 
 //    tabWidget->addTab(mainWidget, POCETNA);
 //    tabWidget->setTabsClosable(true);
@@ -55,7 +62,7 @@ void MainWindow::setupForm()
     setWindowState(Qt::WindowMaximized);
 
     m_leSearch = new QLineEdit(this);
-    setWidgetProperties(*m_leSearch);
+    HelperFunctions::setWidgetProperties(*m_leSearch);
 
     m_pbWarehouse = new QPushButton(WAREHOUSE, this);
     m_pbSell = new QPushButton(SELL, this);
@@ -64,7 +71,7 @@ void MainWindow::setupForm()
     m_pbMaterials = new QPushButton(MATERIALS, this);
 
     foreach(QPushButton* pb, findChildren<QPushButton*>()){
-        setWidgetProperties(*pb);
+        HelperFunctions::setWidgetProperties(*pb);
     }
 
     m_model = new QSqlQueryModel;
@@ -93,10 +100,10 @@ void MainWindow::setupForm()
 
     mainLayout->addLayout(vLayoutButtons);
     mainLayout->addLayout(vLayoutTable);
-    mainWidget->setLayout(mainLayout);
+    m_mainWidget->setLayout(mainLayout);
 
-    setCentralWidget(mainWidget);
-    mainWidget->show();
+    setCentralWidget(m_mainWidget);
+    m_mainWidget->show();
 //    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
 
 }
@@ -143,28 +150,6 @@ void MainWindow::slotSearch()
     }
 }
 
-void MainWindow::setWidgetProperties(QWidget &widget)
-{
-    QDesktopWidget* w = qApp->desktop();
-
-    if(widget.metaObject()->className() == QString("QPushButton")){
-        widget.setFixedWidth(w->width() * 0.15);
-        widget.setFixedHeight(w->height() * 0.05);
-        widget.setStyleSheet(FONT_WEIGHT_BOLD);
-        widget.setStyleSheet(PB_FONTSIZE);
-        return;
-    }
-
-    if(widget.metaObject()->className() == QString("QLineEdit"))
-    {
-        widget.setFixedWidth(w->width() * 0.5);
-        widget.setFixedHeight(w->height() * 0.05);
-        m_leSearch->setPlaceholderText(SEARCH_PLACEHOLDER_TEXT);
-        m_leSearch->setStyleSheet(SEARCHLE_FONTSIZE);
-    }
-}
-
-
 void MainWindow::dbConnect()
 {
      QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
@@ -183,12 +168,6 @@ void MainWindow::dbConnect()
      else {
          qDebug()<<"DB connect good";
      }
-}
-
-void MainWindow::slotMagacinClicked()
-{
-    Warehouse *mag = new Warehouse;
-    mag->show();
 }
 
 MainWindow::~MainWindow()

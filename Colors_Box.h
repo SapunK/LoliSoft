@@ -9,7 +9,7 @@ class Colors_Box : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Colors_Box(QDialog *parent = nullptr);
+    explicit Colors_Box(QWidget *parent = nullptr);
 protected:
     void setupForm();
 
@@ -18,8 +18,8 @@ protected:
     QPushButton *m_pbClose;
 
 public slots:
-    void slotDodadiClicked();
-    void slotZatvoriClicked();
+    void newClicked();
+    void closeClicked();
 
 };
 

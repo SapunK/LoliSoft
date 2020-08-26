@@ -17,10 +17,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
+private:
 
     void setupForm();
     void dbConnect();
+
+    QWidget *m_mainWidget;
 
     QPushButton *m_pbSell;
     QPushButton *m_pbWarehouse;
@@ -34,9 +36,7 @@ protected:
     QLineEdit *m_leSearch;
 
 public slots:
-    void slotMagacinClicked();
     void slotSearch();
-    void setWidgetProperties(QWidget &widget);
 
 };
 
