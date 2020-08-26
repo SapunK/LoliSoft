@@ -8,6 +8,21 @@ class QSqlQueryModel;
 class QTableView;
 class QLineEdit;
 
+namespace MainWindow_NS {
+
+enum columns{
+    id,
+    code,
+    color,
+    material,
+    model,
+    shoesize,
+    price,
+    stock
+};
+
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

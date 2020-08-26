@@ -2,20 +2,28 @@
 #define APPCONSTS_H
 
 extern const char* SEARCH_PLACEHOLDER_TEXT;
-extern const char* MAGACIN;
-extern const char* PRODAZBA;
+extern const char* WAREHOUSE;
+extern const char* SELL;
 extern const char* POCETNA;
-extern const char* NOV;
-extern const char* PROMENI;
-extern const char* IZBRISI;
+extern const char* NEW;
+extern const char* EDIT;
+extern const char* DELETE;
 extern const char* DODADI;
-extern const char* ZATVORI;
+extern const char* CLOSE;
 
 ///MAGACIN
 
-extern const char* BOI;
-extern const char* MATERIJALI;
-extern const char* MODELI;
+extern const char* COLORS;
+extern const char* COLOR;
+extern const char* MATERIALS;
+extern const char* MATERIAL;
+extern const char* MODELS;
+extern const char* MODEL;
+extern const char* SIZE;
+extern const char* PRICE;
+extern const char* STOCK;
+extern const char* CODE;
+extern const char* ID;
 
 ///DIMENSIONS
 

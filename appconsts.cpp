@@ -1,21 +1,30 @@
 #include "appconsts.h"
+
 #include <QTranslator>
 
-const char* SEARCH_PLACEHOLDER_TEXT = QT_TR_NOOP("Пребарувај по шифра, боја, број, материјал, модел");
-const char* MAGACIN = QT_TR_NOOP("Магацин");
-const char* PRODAZBA = QT_TR_NOOP("Продажба");
-const char* POCETNA = QT_TR_NOOP("Почетна");
-const char* NOV = QT_TR_NOOP("Нов");
-const char* PROMENI = QT_TR_NOOP("Промени");
-const char* IZBRISI = QT_TR_NOOP("Избриши");
+const char* SEARCH_PLACEHOLDER_TEXT = "Search by code, color, size, material, model";
+const char* WAREHOUSE = "Warehouse";
+const char* SELL= "Sell";
+//const char* POCETNA = QT_TR_NOOP("Почетна");
+const char* NEW = "New";
+const char* EDIT = "Edit";
+const char* DELETE = "Delete";
 const char* DODADI = QT_TR_NOOP("Додади");
-const char* ZATVORI = QT_TR_NOOP("Затвори");
+const char* CLOSE = "Close";
 
 ///MAGACIN
 
-const char* BOI = QT_TR_NOOP("Бои");
-const char* MATERIJALI = QT_TR_NOOP("Материјали");
-const char* MODELI = QT_TR_NOOP("Модели");
+const char* COLORS = "Colors";
+const char* COLOR = "Color";
+const char* MATERIALS = "Materials";
+const char* MATERIAL = "Material";
+const char* MODELS = "Models";
+const char* MODEL = "Model";
+const char* SIZE = "Size";
+const char* PRICE = "Price";
+const char* STOCK = "Stock";
+const char* CODE = "Code";
+const char* ID = "ID";
 
 ///DIMENSIONS
 

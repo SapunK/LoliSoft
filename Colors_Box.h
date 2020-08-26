@@ -19,9 +19,9 @@ public:
 protected:
     void setupForm();
 
-    QLineEdit *m_leBoja;
-    QPushButton *m_dodadi;
-    QPushButton *m_zatvori;
+    QLineEdit *m_leColor;
+    QPushButton *m_pbAdd;
+    QPushButton *m_pbClose;
 
 public slots:
     void slotDodadiClicked();

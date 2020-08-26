@@ -11,7 +11,7 @@
 using namespace Warehouse_NS;
 Warehouse::Warehouse(QDialog *parent) : QDialog(parent)
 {
-    setWindowTitle(MAGACIN);
+    setWindowTitle(WAREHOUSE);
     setupForm();
     setFixedSize(1000, 600);
     lastClicked = shoes;
@@ -29,17 +29,17 @@ void Warehouse::setupForm()
     QGridLayout *mainLayout = new QGridLayout(this);
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
 
-    m_pbColors = new QPushButton(BOI, this);
+    m_pbColors = new QPushButton(COLORS, this);
     m_pbColors->setFixedWidth(PB_FIXEDWIDTH);
     m_pbColors->setFixedHeight(PB_FIXEDHEIGHT);
     m_pbColors->setStyleSheet(PB_FONTSIZE);
 
-    m_pbModels = new QPushButton(MODELI, this);
+    m_pbModels = new QPushButton(MODELS, this);
     m_pbModels->setFixedWidth(PB_FIXEDWIDTH);
     m_pbModels->setFixedHeight(PB_FIXEDHEIGHT);
     m_pbModels->setStyleSheet(PB_FONTSIZE);
 
-    m_pbMaterials = new QPushButton(MATERIJALI, this);
+    m_pbMaterials = new QPushButton(MATERIALS, this);
     m_pbMaterials->setFixedWidth(PB_FIXEDWIDTH);
     m_pbMaterials->setFixedHeight(PB_FIXEDHEIGHT);
     m_pbMaterials->setStyleSheet(PB_FONTSIZE);
@@ -54,15 +54,15 @@ void Warehouse::setupForm()
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->setModel(m_model);
 
-    m_pbNew = new QPushButton(NOV);
+    m_pbNew = new QPushButton(NEW);
     m_pbNew->setFixedWidth(SMALLPB_FIXEDWIDTH);
     m_pbNew->setHidden(true);
 
-    m_pbChange = new QPushButton(PROMENI);
+    m_pbChange = new QPushButton(EDIT);
     m_pbChange->setFixedWidth(SMALLPB_FIXEDWIDTH);
     m_pbChange->setHidden(true);
 
-    m_pbDelete = new QPushButton(IZBRISI);
+    m_pbDelete = new QPushButton(DELETE);
     m_pbDelete->setFixedWidth(SMALLPB_FIXEDWIDTH);
     m_pbDelete->setHidden(true);
 
@@ -100,7 +100,7 @@ void Warehouse::slotModelsClicked()
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Модел");
 
-    m_pbNew->setText(NOV);
+    m_pbNew->setText(NEW);
     m_pbNew->setHidden(false);
     m_pbChange->setHidden(false);
     m_pbDelete->setHidden(false);
@@ -114,7 +114,7 @@ void Warehouse::slotMaterialsClicked()
     m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
     m_model->setHeaderData(1, Qt::Horizontal, "Материјал");
 
-    m_pbNew->setText(NOV);
+    m_pbNew->setText(NEW);
     m_pbNew->setHidden(false);
     m_pbChange->setHidden(false);
     m_pbDelete->setHidden(false);

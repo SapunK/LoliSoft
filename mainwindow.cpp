@@ -32,13 +32,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupForm()
 {
-    QTabWidget *tabWidget = new QTabWidget;
+//    QTabWidget *tabWidget = new QTabWidget;
     QWidget *mainWidget = new QWidget;
     QGridLayout *grLayout = new QGridLayout;
     QHBoxLayout *horLayout = new QHBoxLayout;
 
-    tabWidget->addTab(mainWidget, POCETNA);
-    tabWidget->setTabsClosable(true);
+//    tabWidget->addTab(mainWidget, POCETNA);
+//    tabWidget->setTabsClosable(true);
 
     //    QFile stylesheet(":/style/styles.css");
     //    stylesheet.open(QIODevice::ReadOnly);
@@ -56,14 +56,14 @@ void MainWindow::setupForm()
     m_pbWarehouse = new QPushButton;
     m_pbWarehouse->setFixedHeight(PB_FIXEDHEIGHT);
     m_pbWarehouse->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbWarehouse->setText(MAGACIN);
+    m_pbWarehouse->setText(WAREHOUSE);
     m_pbWarehouse->setStyleSheet(FONT_WEIGHT_BOLD);
     m_pbWarehouse->setStyleSheet(PB_FONTSIZE);
 
     m_pbSell = new QPushButton;
     m_pbSell->setFixedHeight(PB_FIXEDHEIGHT);
     m_pbSell->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbSell->setText(PRODAZBA);
+    m_pbSell->setText(SELL);
     m_pbSell->setStyleSheet(FONT_WEIGHT_BOLD);
     m_pbSell->setStyleSheet(PB_FONTSIZE);
 
@@ -71,13 +71,14 @@ void MainWindow::setupForm()
     m_table = new QTableView;
     m_table->setModel(m_model);
 
-    m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
-    m_model->setHeaderData(1, Qt::Horizontal, "Боја");
-    m_model->setHeaderData(2, Qt::Horizontal, "Материјал");
-    m_model->setHeaderData(3, Qt::Horizontal, "Модел");
-    m_model->setHeaderData(4, Qt::Horizontal, "Број");
-    m_model->setHeaderData(5, Qt::Horizontal, "Цена");
-    m_model->setHeaderData(6, Qt::Horizontal, "Лагер");
+    m_model->setHeaderData(id, Qt::Horizontal, ID);
+    m_model->setHeaderData(code, Qt::Horizontal, CODE);
+    m_model->setHeaderData(color, Qt::Horizontal, COLOR);
+    m_model->setHeaderData(material, Qt::Horizontal, MATERIAL);
+    m_model->setHeaderData(model, Qt::Horizontal, MODEL);
+    m_model->setHeaderData(shoesize, Qt::Horizontal, SIZE);
+    m_model->setHeaderData(price, Qt::Horizontal, PRICE);
+    m_model->setHeaderData(stock, Qt::Horizontal, STOCK);
 
     //invisible label
     QLabel *invisible = new QLabel;
@@ -114,7 +115,7 @@ void MainWindow::slotSearch()
         //ako ne e prazno filtriraj
         else
         {
-            bool madeOfNumbers;
+            bool madeOfNumbers = false;
             QString searchText = m_leSearch->text();
             for(int i = 0 ; i < searchText.length() ; i++)
             {
@@ -152,9 +153,9 @@ void MainWindow::dbConnect()
      db.setPassword("postgres");
      db.setPort(5432);
 
-     bool oks = db.open();
+     bool bSucsessfulConn = db.open();
 
-     if(oks != true)
+     if(bSucsessfulConn != true)
      {
          qDebug()<<"DB Connect fail";
      }
@@ -167,7 +168,6 @@ void MainWindow::slotMagacinClicked()
 {
     Warehouse *mag = new Warehouse;
     mag->show();
-
 }
 
 MainWindow::~MainWindow()
