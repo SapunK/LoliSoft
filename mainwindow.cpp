@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -18,6 +18,7 @@ namespace MainWindow_NS {
 }
 
 using namespace MainWindow_NS;
+using namespace Warehouse_NS;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,8 +35,9 @@ void MainWindow::setupForm()
 {
 //    QTabWidget *tabWidget = new QTabWidget;
     QWidget *mainWidget = new QWidget;
-    QGridLayout *grLayout = new QGridLayout;
-    QHBoxLayout *horLayout = new QHBoxLayout;
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    QVBoxLayout *vLayoutButtons = new QVBoxLayout;
+    QVBoxLayout *vLayoutTable = new QVBoxLayout;
 
 //    tabWidget->addTab(mainWidget, POCETNA);
 //    tabWidget->setTabsClosable(true);
@@ -47,30 +49,28 @@ void MainWindow::setupForm()
 
     setWindowState(Qt::WindowMaximized);
 
-    m_leSearch = new QLineEdit;
+    m_leSearch = new QLineEdit(this);
     m_leSearch->setPlaceholderText(SEARCH_PLACEHOLDER_TEXT);
     m_leSearch->setStyleSheet(SEARCHLE_FONTSIZE);
     m_leSearch->setFixedWidth(SEARCHLE_FIXEDWIDTH);
     m_leSearch->setFixedHeight(SEARCHLE_FIXEDHEIGHT);
 
-    m_pbWarehouse = new QPushButton;
-    m_pbWarehouse->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbWarehouse->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbWarehouse->setText(WAREHOUSE);
-    m_pbWarehouse->setStyleSheet(FONT_WEIGHT_BOLD);
-    m_pbWarehouse->setStyleSheet(PB_FONTSIZE);
+    m_pbWarehouse = new QPushButton(WAREHOUSE, this);
+    m_pbSell = new QPushButton(SELL, this);
+    m_pbColors = new QPushButton(COLORS, this);
+    m_pbModels = new QPushButton(MODELS, this);
+    m_pbMaterials = new QPushButton(MATERIALS, this);
 
-    m_pbSell = new QPushButton;
-    m_pbSell->setFixedHeight(PB_FIXEDHEIGHT);
-    m_pbSell->setFixedWidth(PB_FIXEDWIDTH);
-    m_pbSell->setText(SELL);
-    m_pbSell->setStyleSheet(FONT_WEIGHT_BOLD);
-    m_pbSell->setStyleSheet(PB_FONTSIZE);
+    foreach(QPushButton* pb, findChildren<QPushButton*>())
+    {
+        setPbProperties(*pb);
+    }
 
     m_model = new QSqlQueryModel;
     m_table = new QTableView;
     m_table->setModel(m_model);
 
+    //TODO create a new model and use it here and in warehouse
     m_model->setHeaderData(id, Qt::Horizontal, ID);
     m_model->setHeaderData(code, Qt::Horizontal, CODE);
     m_model->setHeaderData(color, Qt::Horizontal, COLOR);
@@ -80,22 +80,20 @@ void MainWindow::setupForm()
     m_model->setHeaderData(price, Qt::Horizontal, PRICE);
     m_model->setHeaderData(stock, Qt::Horizontal, STOCK);
 
-    //invisible label
-    QLabel *invisible = new QLabel;
-    invisible->setVisible(false);
+    vLayoutButtons->addWidget(m_pbWarehouse);
+    vLayoutButtons->addWidget(m_pbSell);
+    vLayoutButtons->addWidget(m_pbColors);
+    vLayoutButtons->addWidget(m_pbMaterials);
+    vLayoutButtons->addWidget(m_pbModels);
+    vLayoutButtons->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    horLayout->addWidget(m_leSearch, 0, Qt::AlignTop);
+    vLayoutTable->addWidget(m_leSearch);
+    vLayoutTable->addWidget(m_table);
 
-    grLayout->addLayout(horLayout, 0, 1);
+    mainLayout->addLayout(vLayoutButtons);
+    mainLayout->addLayout(vLayoutTable);
+    mainWidget->setLayout(mainLayout);
 
-    grLayout->addWidget(m_pbWarehouse, 0, 0, 1, 1, Qt::AlignTop);
-    grLayout->addWidget(m_pbSell, 1, 0, 1, 1, Qt::AlignTop);
-    grLayout->addWidget(m_table, 2, 1);
-    grLayout->addWidget(invisible, 10, 0, 10, 5);
-
-    mainWidget->setLayout(grLayout);
-
-//    setCentralWidget(tabWidget);
     setCentralWidget(mainWidget);
     mainWidget->show();
 //    centralWidget()->setStyleSheet("background-image: url(\":/other/images/loli_background.jpg\");");
@@ -142,6 +140,14 @@ void MainWindow::slotSearch()
             }
         }
     }
+}
+
+void MainWindow::setPbProperties(QPushButton &pb)
+{
+    pb.setFixedHeight(PB_FIXEDHEIGHT);
+    pb.setFixedWidth(PB_FIXEDWIDTH);
+    pb.setStyleSheet(FONT_WEIGHT_BOLD);
+    pb.setStyleSheet(PB_FONTSIZE);
 }
 
 void MainWindow::dbConnect()

@@ -2,6 +2,12 @@
 
 #include "appconsts.h"
 
+#include <QGridLayout>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QSqlQuery>
+
 namespace Colors_Box_NS{
 static const char* SEARCH_COLORS_PLACEHOLDER = "Search by color";
 

@@ -1,15 +1,9 @@
 #ifndef BOI_BOX_H
 #define BOI_BOX_H
 
-#include <QObject>
 #include <QDialog>
-#include <QLineEdit>
-#include <QLabel>
-#include <QPushButton>
-#include <QSqlQuery>
-#include <QGridLayout>
-#include <QMessageBox>
-#include <QSqlError>
+
+class QLineEdit;
 
 class Colors_Box : public QDialog
 {

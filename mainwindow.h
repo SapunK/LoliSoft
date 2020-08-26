@@ -8,21 +8,6 @@ class QSqlQueryModel;
 class QTableView;
 class QLineEdit;
 
-namespace MainWindow_NS {
-
-enum columns{
-    id,
-    code,
-    color,
-    material,
-    model,
-    shoesize,
-    price,
-    stock
-};
-
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -39,6 +24,9 @@ protected:
 
     QPushButton *m_pbSell;
     QPushButton *m_pbWarehouse;
+    QPushButton *m_pbColors;
+    QPushButton *m_pbModels;
+    QPushButton *m_pbMaterials;
 
     QSqlQueryModel *m_model;
     QTableView *m_table;
@@ -48,6 +36,7 @@ protected:
 public slots:
     void slotMagacinClicked();
     void slotSearch();
+    void setPbProperties(QPushButton &pb);
 
 };
 

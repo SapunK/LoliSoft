@@ -16,7 +16,14 @@ enum lastClicked{
 };
 
 enum columns{
-
+    id,
+    code,
+    color,
+    material,
+    model,
+    shoesize,
+    price,
+    stock
 };
 }
 

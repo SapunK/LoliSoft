@@ -4,6 +4,9 @@
 #include <QPushButton>
 #include <QSqlQueryModel>
 #include <QTableView>
+#include <QGridLayout>
+#include <QLineEdit>
+#include <QSqlQuery>
 
 #include "Colors_Box.h"
 #include "appconsts.h"
@@ -13,15 +16,16 @@ Warehouse::Warehouse(QDialog *parent) : QDialog(parent)
 {
     setWindowTitle(WAREHOUSE);
     setupForm();
+    //TODO use screenGeometry to set the size
     setFixedSize(1000, 600);
     lastClicked = shoes;
 
-    connect(m_pbColors, SIGNAL(clicked(bool)), this, SLOT(slotColorsClicked()));
-    connect(m_pbModels, SIGNAL(clicked(bool)), this, SLOT(slotModelsClicked()));
-    connect(m_pbMaterials, SIGNAL(clicked(bool)), this, SLOT(slotMaterialsClicked()));
+    connect(m_pbColors, &QAbstractButton::clicked, this, &Warehouse::slotColorsClicked);
+    connect(m_pbModels, &QAbstractButton::clicked, this, &Warehouse::slotModelsClicked);
+    connect(m_pbMaterials, &QAbstractButton::clicked, this, &Warehouse::slotMaterialsClicked);
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
-    connect(searchShortcut, SIGNAL(activated()), this, SLOT(slotSearch()));
-    connect(m_pbNew, SIGNAL(clicked(bool)), this, SLOT(slotNewClicked()));
+    connect(searchShortcut, &QShortcut::activated, this, &Warehouse::slotSearch);
+    connect(m_pbNew, &QAbstractButton::clicked, this, &Warehouse::slotNewClicked);
 }
 
 void Warehouse::setupForm()
@@ -56,15 +60,15 @@ void Warehouse::setupForm()
 
     m_pbNew = new QPushButton(NEW);
     m_pbNew->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_pbNew->setHidden(true);
+    m_pbNew->setDisabled(true);
 
     m_pbChange = new QPushButton(EDIT);
     m_pbChange->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_pbChange->setHidden(true);
+    m_pbChange->setDisabled(true);
 
     m_pbDelete = new QPushButton(DELETE);
     m_pbDelete->setFixedWidth(SMALLPB_FIXEDWIDTH);
-    m_pbDelete->setHidden(true);
+    m_pbDelete->setDisabled(true);
 
     buttonsLayout->addWidget(m_pbNew);
     buttonsLayout->addWidget(m_pbChange);
@@ -83,13 +87,13 @@ void Warehouse::slotColorsClicked()
     lastClicked = colors;
     QSqlQuery modelQuery("SELECT sifra, boja FROM boi");
     m_model->setQuery(modelQuery);
-    m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
-    m_model->setHeaderData(1, Qt::Horizontal, "Боја");
+    m_model->setHeaderData(0, Qt::Horizontal, ID);
+    m_model->setHeaderData(1, Qt::Horizontal, COLOR);
 
-    m_pbNew->setText(tr("Нова"));
-    m_pbNew->setHidden(false);
-    m_pbChange->setHidden(false);
-    m_pbDelete->setHidden(false);
+    m_pbNew->setText(NEW);
+    m_pbNew->setDisabled(false);
+    m_pbChange->setDisabled(false);
+    m_pbDelete->setDisabled(false);
 }
 
 void Warehouse::slotModelsClicked()
@@ -97,13 +101,13 @@ void Warehouse::slotModelsClicked()
     lastClicked = models;
     QSqlQuery modelQuery("SELECT sifra, model FROM modeli");
     m_model->setQuery(modelQuery);
-    m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
-    m_model->setHeaderData(1, Qt::Horizontal, "Модел");
+    m_model->setHeaderData(0, Qt::Horizontal, ID);
+    m_model->setHeaderData(1, Qt::Horizontal, MODEL);
 
     m_pbNew->setText(NEW);
-    m_pbNew->setHidden(false);
-    m_pbChange->setHidden(false);
-    m_pbDelete->setHidden(false);
+    m_pbNew->setDisabled(false);
+    m_pbChange->setDisabled(false);
+    m_pbDelete->setDisabled(false);
 }
 
 void Warehouse::slotMaterialsClicked()
@@ -111,26 +115,26 @@ void Warehouse::slotMaterialsClicked()
     lastClicked = materials;
     QSqlQuery modelQuery("SELECT sifra, materijal FROM materijali");
     m_model->setQuery(modelQuery);
-    m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
-    m_model->setHeaderData(1, Qt::Horizontal, "Материјал");
+    m_model->setHeaderData(0, Qt::Horizontal, ID);
+    m_model->setHeaderData(1, Qt::Horizontal, MODEL);
 
     m_pbNew->setText(NEW);
-    m_pbNew->setHidden(false);
-    m_pbChange->setHidden(false);
-    m_pbDelete->setHidden(false);
+    m_pbNew->setDisabled(false);
+    m_pbChange->setDisabled(false);
+    m_pbDelete->setDisabled(false);;
 }
 
 void Warehouse::slotSearch()
 {
     if(m_leSearch->hasFocus())
     {
-        m_pbNew->setText("Нова");
-        m_pbNew->setHidden(false);
-        m_pbChange->setHidden(false);
-        m_pbDelete->setHidden(false);
+        m_pbNew->setText(NEW);
+        m_pbNew->setDisabled(false);
+        m_pbChange->setDisabled(false);
+        m_pbDelete->setDisabled(false);
         lastClicked = shoes;
         //Ako search e prazno selektiraj gi site
-        if(m_leSearch->text().isEmpty())
+        if(m_leSearch->text().trimmed().isEmpty())
         {
             QSqlQuery modelQuery("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki");
             m_model->setQuery(modelQuery);
@@ -138,7 +142,7 @@ void Warehouse::slotSearch()
         //ako ne e prazno filtriraj
         else
         {
-            bool madeOfNumbers;
+            bool madeOfNumbers = false;
             QString searchText = m_leSearch->text();
             for(int i = 0 ; i < searchText.length() ; i++)
             {
@@ -164,13 +168,14 @@ void Warehouse::slotSearch()
                 m_model->setQuery(modelQuery);
             }
         }
-        m_model->setHeaderData(0, Qt::Horizontal, "Шифра");
-        m_model->setHeaderData(1, Qt::Horizontal, "Боја");
-        m_model->setHeaderData(2, Qt::Horizontal, "Материјал");
-        m_model->setHeaderData(3, Qt::Horizontal, "Модел");
-        m_model->setHeaderData(4, Qt::Horizontal, "Број");
-        m_model->setHeaderData(5, Qt::Horizontal, "Цена");
-        m_model->setHeaderData(6, Qt::Horizontal, "Лагер");
+        m_model->setHeaderData(id, Qt::Horizontal, ID);
+        m_model->setHeaderData(code, Qt::Horizontal, CODE);
+        m_model->setHeaderData(color, Qt::Horizontal, COLOR);
+        m_model->setHeaderData(material, Qt::Horizontal, MATERIAL);
+        m_model->setHeaderData(model, Qt::Horizontal, MODEL);
+        m_model->setHeaderData(shoesize, Qt::Horizontal, SIZE);
+        m_model->setHeaderData(price, Qt::Horizontal, PRICE);
+        m_model->setHeaderData(stock, Qt::Horizontal, STOCK);
 
     }
 }
