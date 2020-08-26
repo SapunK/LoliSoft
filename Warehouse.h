@@ -8,13 +8,6 @@ class QSqlQueryModel;
 class QTableView;
 
 namespace Warehouse_NS{
-enum lastClicked{
-    shoes,
-    colors,
-    materials,
-    models
-};
-
 enum columns{
     id,
     code,
@@ -36,14 +29,9 @@ public:
 protected:
     void setupForm();
 
-    int lastClicked;
-
     QPushButton *m_pbColors;
     QPushButton *m_pbModels;
     QPushButton *m_pbMaterials;
-    QPushButton *m_pbNew;
-    QPushButton *m_pbChange;
-    QPushButton *m_pbDelete;
 
     QLineEdit *m_leSearch;
 
@@ -52,11 +40,7 @@ protected:
 signals:
 
 public slots:
-    void slotColorsClicked();
-    void slotModelsClicked();
-    void slotMaterialsClicked();
     void slotSearch();
-    void slotNewClicked();
 };
 
 #endif // MAGACIN_H

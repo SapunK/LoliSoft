@@ -36,7 +36,7 @@ protected:
 public slots:
     void slotMagacinClicked();
     void slotSearch();
-    void setPbProperties(QPushButton &pb);
+    void setWidgetProperties(QWidget &widget);
 
 };
 

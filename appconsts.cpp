@@ -27,18 +27,10 @@ const char* CODE = "Code";
 const char* ID = "ID";
 
 ///DIMENSIONS
-
-const int PB_FIXEDHEIGHT = 40;
-const int PB_FIXEDWIDTH = 250;
+//TODO get rid of fixed px for fonts
 const char* PB_FONTSIZE = "font-size:23px;";
-
-const int SEARCHLE_FIXEDWIDTH = 700;
-const int SEARCHLE_FIXEDHEIGHT = 40;
 const char* SEARCHLE_FONTSIZE = "font-size:23px;";
-
 const char* FONT_WEIGHT_BOLD = "font-weight:bold;";
-
-const int SMALLPB_FIXEDWIDTH = 100;
 
 
 

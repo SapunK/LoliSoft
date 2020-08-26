@@ -27,15 +27,8 @@ extern const char* ID;
 
 ///DIMENSIONS
 
-extern const int PB_FIXEDHEIGHT;
-extern const int PB_FIXEDWIDTH;
-extern const int SMALLPB_FIXEDWIDTH;
 extern const char* PB_FONTSIZE;
-
-extern const int SEARCHLE_FIXEDWIDTH;
-extern const int SEARCHLE_FIXEDHEIGHT;
 extern const char* SEARCHLE_FONTSIZE;
-
 extern const char* FONT_WEIGHT_BOLD;
 
 #endif // APPCONSTS_H

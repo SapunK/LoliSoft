@@ -10,7 +10,12 @@
 #include <QDebug>
 #include <QShortcut>
 
+#include <QDesktopWidget>
+#include <QApplication>
+#include <QGuiApplication>
+
 #include "Warehouse.h"
+#include "Colors_Box.h"
 #include "appconsts.h"
 
 namespace MainWindow_NS {
@@ -50,10 +55,7 @@ void MainWindow::setupForm()
     setWindowState(Qt::WindowMaximized);
 
     m_leSearch = new QLineEdit(this);
-    m_leSearch->setPlaceholderText(SEARCH_PLACEHOLDER_TEXT);
-    m_leSearch->setStyleSheet(SEARCHLE_FONTSIZE);
-    m_leSearch->setFixedWidth(SEARCHLE_FIXEDWIDTH);
-    m_leSearch->setFixedHeight(SEARCHLE_FIXEDHEIGHT);
+    setWidgetProperties(*m_leSearch);
 
     m_pbWarehouse = new QPushButton(WAREHOUSE, this);
     m_pbSell = new QPushButton(SELL, this);
@@ -61,9 +63,8 @@ void MainWindow::setupForm()
     m_pbModels = new QPushButton(MODELS, this);
     m_pbMaterials = new QPushButton(MATERIALS, this);
 
-    foreach(QPushButton* pb, findChildren<QPushButton*>())
-    {
-        setPbProperties(*pb);
+    foreach(QPushButton* pb, findChildren<QPushButton*>()){
+        setWidgetProperties(*pb);
     }
 
     m_model = new QSqlQueryModel;
@@ -142,13 +143,27 @@ void MainWindow::slotSearch()
     }
 }
 
-void MainWindow::setPbProperties(QPushButton &pb)
+void MainWindow::setWidgetProperties(QWidget &widget)
 {
-    pb.setFixedHeight(PB_FIXEDHEIGHT);
-    pb.setFixedWidth(PB_FIXEDWIDTH);
-    pb.setStyleSheet(FONT_WEIGHT_BOLD);
-    pb.setStyleSheet(PB_FONTSIZE);
+    QDesktopWidget* w = qApp->desktop();
+
+    if(widget.metaObject()->className() == QString("QPushButton")){
+        widget.setFixedWidth(w->width() * 0.15);
+        widget.setFixedHeight(w->height() * 0.05);
+        widget.setStyleSheet(FONT_WEIGHT_BOLD);
+        widget.setStyleSheet(PB_FONTSIZE);
+        return;
+    }
+
+    if(widget.metaObject()->className() == QString("QLineEdit"))
+    {
+        widget.setFixedWidth(w->width() * 0.5);
+        widget.setFixedHeight(w->height() * 0.05);
+        m_leSearch->setPlaceholderText(SEARCH_PLACEHOLDER_TEXT);
+        m_leSearch->setStyleSheet(SEARCHLE_FONTSIZE);
+    }
 }
+
 
 void MainWindow::dbConnect()
 {

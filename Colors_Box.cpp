@@ -1,12 +1,12 @@
 #include "Colors_Box.h"
 
-#include "appconsts.h"
-
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSqlQuery>
+
+#include "appconsts.h"
 
 namespace Colors_Box_NS{
 static const char* SEARCH_COLORS_PLACEHOLDER = "Search by color";
@@ -15,11 +15,12 @@ static const char* SEARCH_COLORS_PLACEHOLDER = "Search by color";
 
 using namespace Colors_Box_NS;
 
-Colors_Box::Colors_Box(QDialog *parent) : QDialog(parent)
+Colors_Box::Colors_Box(QDialog *parent)
+    : QDialog(parent)
 {
     setWindowTitle(COLORS);
     setupForm();
-    connect(m_pbAdd, &QAbstractButton::clicked, this, &Colors_Box::slotDodadiClicked);
+    connect(m_pbNew, &QAbstractButton::clicked, this, &Colors_Box::slotDodadiClicked);
     connect(m_pbClose, &QAbstractButton::clicked, this, &Colors_Box::slotZatvoriClicked);
 }
 
@@ -28,17 +29,13 @@ void Colors_Box::setupForm()
     m_leColor = new QLineEdit(this);
     m_leColor->setPlaceholderText(SEARCH_COLORS_PLACEHOLDER);
 
-    //ova valjda kje bide new button a ne dodadi(insert)
-    m_pbAdd = new QPushButton(this);
-    m_pbAdd->setText(DODADI);
-
-    m_pbClose = new QPushButton(this);
-    m_pbClose->setText(CLOSE);
+    m_pbNew = new QPushButton(NEW, this);
+    m_pbClose = new QPushButton(CLOSE, this);
 
     QGridLayout *mainLayout = new QGridLayout(this);
 
     mainLayout->addWidget(m_leColor, 0, 0, 1, 2);
-    mainLayout->addWidget(m_pbAdd, 1, 0, 1, 1);
+    mainLayout->addWidget(m_pbNew, 1, 0, 1, 1);
     mainLayout->addWidget(m_pbClose, 1, 1, 1, 1);
 }
 

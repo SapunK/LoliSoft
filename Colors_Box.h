@@ -14,7 +14,7 @@ protected:
     void setupForm();
 
     QLineEdit *m_leColor;
-    QPushButton *m_pbAdd;
+    QPushButton *m_pbNew;
     QPushButton *m_pbClose;
 
 public slots:
