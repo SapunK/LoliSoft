@@ -13,7 +13,6 @@ public:
     static int desktopHeight();
 
     static void setDesktopSize();
-    static void populateDb();
 
 private:
     static int m_desktopWidth;

@@ -29,6 +29,7 @@ private:
     QPushButton *m_pbColors;
     QPushButton *m_pbModels;
     QPushButton *m_pbMaterials;
+    QPushButton *m_pbPopulateDb;
 
     QSqlQueryModel *m_model;
     QTableView *m_table;

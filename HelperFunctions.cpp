@@ -50,8 +50,3 @@ void HelperFunctions::setDesktopSize()
     m_desktopWidth = qApp->desktop()->width();
     m_desktopHeight = qApp->desktop()->height();
 }
-
-void HelperFunctions::populateDb()
-{
-
-}

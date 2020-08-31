@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
     Colors_Box.cpp \
     HelperFunctions.cpp \
+    PopulateDatabase.cpp \
     Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 HEADERS += \
     Colors_Box.h \
     HelperFunctions.h \
+    PopulateDatabase.h \
     Warehouse.h \
         mainwindow.h \
         appconsts.h
