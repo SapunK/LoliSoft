@@ -1,6 +1,12 @@
 #ifndef APPCONSTS_H
 #define APPCONSTS_H
 
+///MESSAGE BOXES
+extern const char* EMPTY_FIELD;
+extern const char* MSG_ERROR;
+extern const char* ERR_CONTACT_ADMINISTRATOR;
+
+///OTHER
 extern const char* SEARCH_PLACEHOLDER_TEXT;
 extern const char* WAREHOUSE;
 extern const char* SELL;
@@ -10,9 +16,6 @@ extern const char* EDIT;
 extern const char* DELETE;
 extern const char* DODADI;
 extern const char* CLOSE;
-
-///MAGACIN
-
 extern const char* COLORS;
 extern const char* COLOR;
 extern const char* MATERIALS;

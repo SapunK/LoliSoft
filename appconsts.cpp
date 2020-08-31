@@ -1,19 +1,18 @@
 #include "appconsts.h"
 
-#include <QTranslator>
+///MESSAGE BOXES
+const char* EMPTY_FIELD = "Empty field";
+const char* MSG_ERROR = "Error";
+const char* ERR_CONTACT_ADMINISTRATOR = "An error has occured, contact administrator.\nMore info in the log.";
 
+///OTHER
 const char* SEARCH_PLACEHOLDER_TEXT = "Search by code, color, size, material, model";
 const char* WAREHOUSE = "Warehouse";
 const char* SELL= "Sell";
-//const char* POCETNA = QT_TR_NOOP("Почетна");
 const char* NEW = "New";
 const char* EDIT = "Edit";
 const char* DELETE = "Delete";
-const char* DODADI = QT_TR_NOOP("Додади");
 const char* CLOSE = "Close";
-
-///MAGACIN
-
 const char* COLORS = "Colors";
 const char* COLOR = "Color";
 const char* MATERIALS = "Materials";

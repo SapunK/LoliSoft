@@ -10,10 +10,10 @@ public:
     static void setWidgetProperties(QWidget &widget);
 
     static int desktopWidth();
-
     static int desktopHeight();
 
     static void setDesktopSize();
+    static void populateDb();
 
 private:
     static int m_desktopWidth;
