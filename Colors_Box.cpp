@@ -41,6 +41,7 @@ void Colors_Box::setupForm()
 
 void Colors_Box::newClicked()
 {
+    //TODO translate theese to english and add the text in appconsts or locally in namespace
     if(m_leColor->text().trimmed().isEmpty())
     {
         QMessageBox::information(this, "Празно поле", "Полето за боја е празно, прво внесете\n"

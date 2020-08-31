@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupForm()
 {
-//    QTabWidget *tabWidget = new QTabWidget;
     m_mainWidget = new QWidget;
     QHBoxLayout *mainLayout = new QHBoxLayout;
     QVBoxLayout *vLayoutButtons = new QVBoxLayout;
@@ -51,13 +50,9 @@ void MainWindow::setupForm()
 
     HelperFunctions::setDesktopSize();
 
-//    tabWidget->addTab(mainWidget, POCETNA);
-//    tabWidget->setTabsClosable(true);
-
     //    QFile stylesheet(":/style/styles.css");
     //    stylesheet.open(QIODevice::ReadOnly);
     //    QTextStream ts(&stylesheet);
-    //    mainWidget->setStyleSheet(ts.readAll());
 
     setWindowState(Qt::WindowMaximized);
 
@@ -112,41 +107,21 @@ void MainWindow::slotSearch()
 {
     if(m_leSearch->hasFocus())
     {
-        //Ako search e prazno selektiraj gi site
+        QString modelQuery;
+        //If search is empty then select all
         if(m_leSearch->text().isEmpty())
         {
-            QSqlQuery modelQuery("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki");
-            m_model->setQuery(modelQuery);
+            //TODO join with tables since we only hold IDs (for color, material, model) in this one.
+            modelQuery = "SELECT code, color, material, model, size, price, stock"
+                         "FROM shoes;";
+        } else {
+            //TODO fix WHERE clause for all columns
+            modelQuery = QString("SELECT code, color, material, model, size, price, stock "
+                                 "FROM obuvki "
+                                 "WHERE color ilike '%%1%' OR material ilike '%%1%' "
+                                 "OR model ilike '%%1%';").arg(m_leSearch->text());
         }
-        //ako ne e prazno filtriraj
-        else
-        {
-            bool madeOfNumbers = false;
-            QString searchText = m_leSearch->text();
-            for(int i = 0 ; i < searchText.length() ; i++)
-            {
-                if(searchText[i].isDigit())
-                {
-                    madeOfNumbers = true;
-                    break;
-                }
-            }
-            //dokolku search se brojki togash selektiraj po sifra i broj
-            if(madeOfNumbers)
-            {
-                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
-                                           " WHERE sifra = %1 OR broj=%1").arg(searchText));
-                m_model->setQuery(modelQuery);
-            }
-            //ako e string togash selektiraj spored ostanato
-            else
-            {
-                QString modelQuery(QString("SELECT sifra, boja, materijal, model, broj, cena, lager FROM obuvki"
-                                           " WHERE boja ilike '%%1%' OR"
-                                           " materijal ilike '%%1%' OR model ilike '%%1%'").arg(searchText));
-                m_model->setQuery(modelQuery);
-            }
-        }
+        m_model->setQuery(modelQuery);
     }
 }
 
