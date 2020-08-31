@@ -20,6 +20,7 @@ static const char* CREATE_MODELS_QUERY = "CREATE TABLE public.models"
                                          "model varchar(50) NOT NULL, "
                                          "PRIMARY KEY (id));";
 
+//TODO add shoe code
 static const char* CREATE_SHOES_QUERY = "CREATE TABLE public.shoes("
                                         "id serial NOT NULL, "
                                         "color integer NOT NULL, "
