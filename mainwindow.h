@@ -29,7 +29,10 @@ private:
     QPushButton *m_pbColors;
     QPushButton *m_pbModels;
     QPushButton *m_pbMaterials;
-    QPushButton *m_pbPopulateDb;
+#ifdef QT_DEBUG
+    QPushButton *m_pbCreateDb;
+    QPushButton *m_pbFillDb;
+#endif
 
     QSqlQueryModel *m_model;
     QTableView *m_table;

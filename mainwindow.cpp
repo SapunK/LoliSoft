@@ -17,7 +17,11 @@
 #include "PopulateDatabase.h"
 
 namespace MainWindow_NS {
-static const char* POPULATE_DB = "Populate DB";
+#ifdef QT_DEBUG
+static const char* CREATE_DB = "Create DB";
+static const char* FILL_DB = "Fill DB";
+#endif
+
 }
 
 using namespace MainWindow_NS;
@@ -31,10 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
     connect(searchShortcut, &QShortcut::activated, this, &MainWindow::slotSearch);
-
-    connect(m_pbPopulateDb, &QPushButton::clicked, []{
-        PopulateDatabase::createDatabase();
-    });
 
     connect(m_pbColors, &QAbstractButton::clicked, this, [this](){
        Colors_Box *box = new Colors_Box(m_mainWidget);
@@ -69,8 +69,6 @@ void MainWindow::setupForm()
     m_pbColors = new QPushButton(COLORS, this);
     m_pbModels = new QPushButton(MODELS, this);
     m_pbMaterials = new QPushButton(MATERIALS, this);
-    //For testing purposes
-    m_pbPopulateDb = new QPushButton(POPULATE_DB, this);
 
     foreach(QPushButton* pb, findChildren<QPushButton*>()){
         HelperFunctions::setWidgetProperties(*pb);
@@ -96,7 +94,20 @@ void MainWindow::setupForm()
     vLayoutButtons->addWidget(m_pbMaterials);
     vLayoutButtons->addWidget(m_pbModels);
     vLayoutButtons->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
-    vLayoutButtons->addWidget(m_pbPopulateDb);
+#ifdef QT_DEBUG
+    //For testing purposes
+    m_pbCreateDb = new QPushButton(CREATE_DB, this);
+    m_pbFillDb = new QPushButton(FILL_DB, this);
+    vLayoutButtons->addWidget(m_pbCreateDb);
+    vLayoutButtons->addWidget(m_pbFillDb);
+
+//    connect(m_pbPopulateDb, &QPushButton::clicked, []{
+//        PopulateDatabase::createDatabase();
+//    });
+    //TODO test this way of connect, if it doesn't work go back to lambda connect
+    connect(m_pbCreateDb, &QPushButton::clicked, &PopulateDatabase::createDatabase);
+    connect(m_pbFillDb, &QPushButton::clicked, &PopulateDatabase::fillDatabase);
+#endif
 
     vLayoutTable->addWidget(m_leSearch);
     vLayoutTable->addWidget(m_table);
