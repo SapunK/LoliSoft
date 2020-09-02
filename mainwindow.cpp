@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     dbConnect();
     setupForm();
 
+    //TODO change this with QLineEdit ReturnPressed signal
     QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
     connect(searchShortcut, &QShortcut::activated, this, &MainWindow::slotSearch);
 
@@ -124,21 +125,21 @@ void MainWindow::setupForm()
 
 void MainWindow::slotSearch()
 {
+    //TODO find a way without checking if it has focus
     if(m_leSearch->hasFocus())
     {
-        QString modelQuery;
-        //If search is empty then select all
-        if(m_leSearch->text().isEmpty())
-        {
-            //TODO join with tables since we only hold IDs (for color, material, model) in this one.
-            modelQuery = "SELECT code, color, material, model, size, price, stock"
-                         "FROM shoes;";
-        } else {
-            //TODO fix WHERE clause for all columns
-            modelQuery = QString("SELECT code, color, material, model, size, price, stock "
-                                 "FROM obuvki "
-                                 "WHERE color ilike '%%1%' OR material ilike '%%1%' "
-                                 "OR model ilike '%%1%';").arg(m_leSearch->text());
+        QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.size, s.price "
+                             "FROM shoes s "
+                             "INNER JOIN colors c on s.color = c.id "
+                             "INNER JOIN materials ma on s.material = ma.id "
+                             "INNER JOIN models mo on s.model = mo.id ";
+        if(!m_leSearch->text().isEmpty()){
+            //TODO test this and add stock
+            modelQuery.append(QString("WHERE s.code ilike '%%1%' OR "
+                                      "c.color ilike '%%1%' OR "
+                                      "ma.material ilike '%%1%' OR "
+                                      "mo.model OR s.size ilike '%%1%'")
+                                      .arg(m_leSearch->text()));
         }
         m_model->setQuery(modelQuery);
     }
