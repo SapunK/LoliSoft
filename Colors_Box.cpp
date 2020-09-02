@@ -28,7 +28,7 @@ Colors_Box::Colors_Box(QWidget *parent)
     setupForm();
 
     connect(m_pbNew, &QAbstractButton::clicked, this, &Colors_Box::newClicked);
-    connect(m_pbClose, &QAbstractButton::clicked, this, &Colors_Box::closeClicked);
+    connect(m_pbClose, &QAbstractButton::clicked, this, &QDialog::close);
     connect(m_leColorSearch, &QLineEdit::returnPressed, this, [this](){
         m_model->setQuery(COLOR_SEARCH_QUERY.arg(m_leColorSearch->text()));
     });
@@ -97,9 +97,5 @@ void Colors_Box::newClicked()
         }
         m_model->setQuery(m_model->query().lastQuery());
     }
-}
-void Colors_Box::closeClicked()
-{
-    reject();
 }
 

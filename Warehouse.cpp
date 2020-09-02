@@ -18,8 +18,7 @@ Warehouse::Warehouse(QWidget *parent)
     setupForm();
     setFixedSize(HelperFunctions::desktopWidth() * 0.5, HelperFunctions::desktopHeight() * 0.4);
 
-    QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
-    connect(searchShortcut, &QShortcut::activated, this, &Warehouse::slotSearch);
+    connect(m_leSearch, &QLineEdit::returnPressed, this, &Warehouse::slotSearch);
 }
 
 void Warehouse::setupForm()

@@ -27,7 +27,6 @@ protected:
 
 public slots:
     void newClicked();
-    void closeClicked();
 
 };
 

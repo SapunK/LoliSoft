@@ -33,9 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     dbConnect();
     setupForm();
 
-    //TODO change this with QLineEdit ReturnPressed signal
-    QShortcut *searchShortcut = new QShortcut(Qt::Key_Return, this);
-    connect(searchShortcut, &QShortcut::activated, this, &MainWindow::slotSearch);
+    connect(m_leSearch, &QLineEdit::returnPressed, this, &MainWindow::slotSearch);
 
     connect(m_pbColors, &QAbstractButton::clicked, this, [this](){
        Colors_Box *box = new Colors_Box(m_mainWidget);
