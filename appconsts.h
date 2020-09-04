@@ -5,6 +5,7 @@
 extern const char* EMPTY_FIELD;
 extern const char* MSG_ERROR;
 extern const char* ERR_CONTACT_ADMINISTRATOR;
+extern const char* ERR_EXISTS_RELATION;
 
 ///OTHER
 extern const char* SEARCH_PLACEHOLDER_TEXT;

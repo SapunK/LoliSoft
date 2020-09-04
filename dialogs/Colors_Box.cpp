@@ -16,7 +16,7 @@ namespace Colors_Box_NS{
 static const char* SEARCH_COLORS_PLACEHOLDER = "Search by color";
 static const char* INSERT_COLOR = "Insert new color";
 static const char* COLOR_FIELD_EMPTY = "Color field is empty.\nInsert a new color then press the button.";
-static const QString COLOR_SEARCH_QUERY = "SELECT color FROM colors WHERE color ilike '%%1%';";
+static const QString COLOR_SEARCH_QUERY = "SELECT id, color FROM colors WHERE color ilike '%%1%';";
 }
 
 using namespace Colors_Box_NS;
@@ -32,18 +32,25 @@ Colors_Box::Colors_Box(QWidget *parent)
     connect(m_leColorSearch, &QLineEdit::returnPressed, this, [this](){
         m_model->setQuery(COLOR_SEARCH_QUERY.arg(m_leColorSearch->text()));
     });
+    connect(m_pbDelete, &QPushButton::clicked, this, &Colors_Box::deleteRecord);
+    connect(this, &Colors_Box::refreshModel, this, [this]{
+       m_model->setQuery(m_model->query().lastQuery());
+    });
 }
 
 void Colors_Box::setupForm()
 {
     m_model = new QSqlQueryModel(this);
-    m_model->setHeaderData(0, Qt::Horizontal, COLOR);
+    m_model->setHeaderData(id, Qt::Horizontal, ID);
+    m_model->setHeaderData(color, Qt::Horizontal, COLOR);
+    m_model->setQuery(COLOR_SEARCH_QUERY.arg(""));
 
     m_table = new QTableView(this);
     m_table->resizeColumnsToContents();
     m_table->setSelectionMode(QTableView::SingleSelection);
     m_table->setSelectionBehavior(QTableView::SelectRows);
     m_table->setModel(m_model);
+    m_table->hideColumn(id);
 
     m_leColorSearch = new QLineEdit(this);
     m_leColorSearch->setPlaceholderText(SEARCH_COLORS_PLACEHOLDER);
@@ -59,6 +66,9 @@ void Colors_Box::setupForm()
     m_pbClose = new QPushButton(CLOSE, this);
     m_pbClose->setFocusPolicy(Qt::NoFocus);
 
+    m_pbDelete = new QPushButton(DELETE, this);
+    m_pbDelete->setFocusPolicy(Qt::NoFocus);
+
     QHBoxLayout *mainLayout = new QHBoxLayout;
 
     QVBoxLayout *vLeftSide = new QVBoxLayout;
@@ -67,6 +77,7 @@ void Colors_Box::setupForm()
     vLeftSide->addWidget(m_leNewColor);
     vLeftSide->addWidget(m_pbNew);
     vLeftSide->addWidget(m_pbClose);
+    vLeftSide->addWidget(m_pbDelete);
     vLeftSide->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     vRightSide->addWidget(m_leColorSearch);
@@ -95,7 +106,33 @@ void Colors_Box::newClicked()
             QMessageBox::critical(this, MSG_ERROR, ERR_CONTACT_ADMINISTRATOR);
             return;
         }
-        m_model->setQuery(m_model->query().lastQuery());
+        emit refreshModel();
+    }
+}
+
+void Colors_Box::deleteRecord()
+{
+    QSqlQuery q;
+    int currentColorId = m_model->index(m_table->currentIndex().row(), id).data().toInt();
+    QString queryString = QString("SELECT COUNT(*) FROM shoes WHERE color = %1;")
+            .arg(currentColorId);
+    if(q.exec(queryString) && q.next())
+    {
+        //If there is a relation to shoes table show info to the user that the record can't be deleted
+        if(q.value(0).toInt() > 0)
+        {
+            QMessageBox::critical(this, MSG_ERROR, ERR_EXISTS_RELATION);
+            return;
+        }
+
+        queryString = QString("DELETE FROM colors WHERE id = %1;").arg(currentColorId);
+        if(!q.exec(queryString))
+        {
+            qCritical()<<"Query error: "<<q.lastError()
+                      <<" Query executed: "<<q.lastQuery();
+            QMessageBox::critical(this, MSG_ERROR, ERR_CONTACT_ADMINISTRATOR);
+        }
+        emit refreshModel();
     }
 }
 

@@ -25,19 +25,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    Colors_Box.cpp \
     HelperFunctions.cpp \
     PopulateDatabase.cpp \
-    Warehouse.cpp \
+    dialogs/Colors_Box.cpp \
+    dialogs/Materials_Box.cpp \
+    dialogs/Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
         appconsts.cpp
 
 HEADERS += \
-    Colors_Box.h \
     HelperFunctions.h \
     PopulateDatabase.h \
-    Warehouse.h \
+    dialogs/Colors_Box.h \
+    dialogs/Materials_Box.h \
+    dialogs/Warehouse.h \
         mainwindow.h \
         appconsts.h
 
@@ -53,3 +55,5 @@ RESOURCES += \
     res.qrc
 
 LIBS += -L$$PWD/lib
+
+INCLUDEPATH += dialogs

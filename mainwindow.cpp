@@ -15,6 +15,7 @@
 #include "appconsts.h"
 #include "HelperFunctions.h"
 #include "PopulateDatabase.h"
+#include "Materials_Box.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
@@ -41,6 +42,10 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(m_pbWarehouse, &QAbstractButton::clicked, this, [this](){
         Warehouse *box = new Warehouse(this);
+        box->show();
+    });
+    connect(m_pbMaterials, &QAbstractButton::clicked, this, [this](){
+        Materials_Box *box = new Materials_Box(this);
         box->show();
     });
 }
@@ -73,8 +78,11 @@ void MainWindow::setupForm()
         HelperFunctions::setWidgetProperties(*pb);
     }
 
-    m_model = new QSqlQueryModel;
-    m_table = new QTableView;
+    m_model = new QSqlQueryModel(this);
+    //TODO create a custom table class
+    m_table = new QTableView(this);
+    m_table->setSelectionMode(QTableView::SingleSelection);
+    m_table->setSelectionBehavior(QTableView::SelectRows);
     m_table->setModel(m_model);
 
     //TODO create a new model and use it here and in warehouse
@@ -100,10 +108,6 @@ void MainWindow::setupForm()
     vLayoutButtons->addWidget(m_pbCreateDb);
     vLayoutButtons->addWidget(m_pbFillDb);
 
-//    connect(m_pbPopulateDb, &QPushButton::clicked, []{
-//        PopulateDatabase::createDatabase();
-//    });
-    //TODO test this way of connect, if it doesn't work go back to lambda connect
     connect(m_pbCreateDb, &QPushButton::clicked, &PopulateDatabase::createDatabase);
     connect(m_pbFillDb, &QPushButton::clicked, &PopulateDatabase::fillDatabase);
 #endif
@@ -126,18 +130,18 @@ void MainWindow::slotSearch()
     //TODO find a way without checking if it has focus
     if(m_leSearch->hasFocus())
     {
+        //TODO add stock
         QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.size, s.price "
                              "FROM shoes s "
                              "INNER JOIN colors c on s.color = c.id "
                              "INNER JOIN materials ma on s.material = ma.id "
                              "INNER JOIN models mo on s.model = mo.id ";
         if(!m_leSearch->text().isEmpty()){
-            //TODO test this and add stock
+            //FIXME This append doesn't work??
             modelQuery.append(QString("WHERE s.code ilike '%%1%' OR "
                                       "c.color ilike '%%1%' OR "
                                       "ma.material ilike '%%1%' OR "
-                                      "mo.model OR s.size ilike '%%1%'")
-                                      .arg(m_leSearch->text()));
+                                      "mo.model OR s.size ilike '%%1%'").arg(m_leSearch->text()));
         }
         m_model->setQuery(modelQuery);
     }
