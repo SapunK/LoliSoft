@@ -151,6 +151,7 @@ void MainWindow::slotSearch()
         }
     }
     m_model->setQuery(modelQuery);
+    m_table->resizeColumnsToContents();
 }
 
 void MainWindow::dbConnect()

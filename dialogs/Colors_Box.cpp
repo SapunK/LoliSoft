@@ -35,6 +35,7 @@ Colors_Box::Colors_Box(QWidget *parent)
     connect(m_pbDelete, &QPushButton::clicked, this, &Colors_Box::deleteRecord);
     connect(this, &Colors_Box::refreshModel, this, [this]{
        m_model->setQuery(m_model->query().lastQuery());
+       m_table->resizeColumnsToContents();
     });
 }
 
@@ -46,10 +47,10 @@ void Colors_Box::setupForm()
     m_model->setQuery(COLOR_SEARCH_QUERY.arg(""));
 
     m_table = new QTableView(this);
-    m_table->resizeColumnsToContents();
     m_table->setSelectionMode(QTableView::SingleSelection);
     m_table->setSelectionBehavior(QTableView::SelectRows);
     m_table->setModel(m_model);
+    m_table->resizeColumnsToContents();
     m_table->hideColumn(id);
 
     m_leColorSearch = new QLineEdit(this);
