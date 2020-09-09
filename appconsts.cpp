@@ -7,7 +7,7 @@ const char* ERR_CONTACT_ADMINISTRATOR = "An error has occured, contact administr
 const char* ERR_EXISTS_RELATION = "Can't delete record.\nThere is a relation to another field.";
 
 ///OTHER
-const char* SEARCH_PLACEHOLDER_TEXT = "Search by code, color, size, material, model";
+const char* SEARCH_PLACEHOLDER_TEXT = "Search by code, color, material, model, size";
 const char* WAREHOUSE = "Warehouse";
 const char* SELL= "Sell";
 const char* NEW = "New";

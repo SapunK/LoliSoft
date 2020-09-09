@@ -16,10 +16,11 @@
 #include "HelperFunctions.h"
 #include "PopulateDatabase.h"
 #include "Materials_Box.h"
+#include "Models_Box.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
-static const char* CREATE_DB = "Create DB";
+static const char* CREATE_TABLES = "Create tables";
 static const char* FILL_DB = "Fill DB";
 #endif
 
@@ -46,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(m_pbMaterials, &QAbstractButton::clicked, this, [this](){
         Materials_Box *box = new Materials_Box(this);
+        box->show();
+    });
+    connect(m_pbModels, &QAbstractButton::clicked, this, [this](){
+        Models_Box *box = new Models_Box(this);
         box->show();
     });
 }
@@ -103,12 +108,12 @@ void MainWindow::setupForm()
     vLayoutButtons->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 #ifdef QT_DEBUG
     //For testing purposes
-    m_pbCreateDb = new QPushButton(CREATE_DB, this);
+    m_pbCreateTables = new QPushButton(CREATE_TABLES, this);
     m_pbFillDb = new QPushButton(FILL_DB, this);
-    vLayoutButtons->addWidget(m_pbCreateDb);
+    vLayoutButtons->addWidget(m_pbCreateTables);
     vLayoutButtons->addWidget(m_pbFillDb);
 
-    connect(m_pbCreateDb, &QPushButton::clicked, &PopulateDatabase::createDatabase);
+    connect(m_pbCreateTables, &QPushButton::clicked, &PopulateDatabase::createDatabase);
     connect(m_pbFillDb, &QPushButton::clicked, &PopulateDatabase::fillDatabase);
 #endif
 
@@ -127,24 +132,25 @@ void MainWindow::setupForm()
 
 void MainWindow::slotSearch()
 {
-    //TODO find a way without checking if it has focus
-    if(m_leSearch->hasFocus())
-    {
-        //TODO add stock
-        QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.size, s.price "
-                             "FROM shoes s "
-                             "INNER JOIN colors c on s.color = c.id "
-                             "INNER JOIN materials ma on s.material = ma.id "
-                             "INNER JOIN models mo on s.model = mo.id ";
-        if(!m_leSearch->text().isEmpty()){
-            //FIXME This append doesn't work??
-            modelQuery.append(QString("WHERE s.code ilike '%%1%' OR "
-                                      "c.color ilike '%%1%' OR "
-                                      "ma.material ilike '%%1%' OR "
-                                      "mo.model OR s.size ilike '%%1%'").arg(m_leSearch->text()));
+    //TODO add stock
+    QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.size, s.price "
+                         "FROM shoes s "
+                         "INNER JOIN colors c on s.color = c.id "
+                         "INNER JOIN materials ma on s.material = ma.id "
+                         "INNER JOIN models mo on s.model = mo.id ";
+    if(!m_leSearch->text().isEmpty()){
+        bool madeOfNumbers = false;
+        int codeSize = m_leSearch->text().toInt(&madeOfNumbers);
+
+        modelQuery.append(QString("WHERE c.color ilike '%1%' OR "
+                                  "ma.material ilike '%1%' OR "
+                                  "mo.model ilike '%1%' ").arg(m_leSearch->text()));
+
+        if(madeOfNumbers){
+            modelQuery.append(QString("OR s.code = %1 OR s.size = %1").arg(codeSize));
         }
-        m_model->setQuery(modelQuery);
     }
+    m_model->setQuery(modelQuery);
 }
 
 void MainWindow::dbConnect()
@@ -156,14 +162,14 @@ void MainWindow::dbConnect()
      db.setPassword("postgres");
      db.setPort(5432);
 
-     bool bSucsessfulConn = db.open();
+     bool bSuccessfulConn = db.open();
 
-     if(bSucsessfulConn != true)
+     if(bSuccessfulConn != true)
      {
          qDebug()<<"DB Connect fail";
      }
      else {
-         qDebug()<<"DB connect good";
+         qDebug()<<"Successful DB connection";
      }
 }
 

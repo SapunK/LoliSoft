@@ -30,7 +30,7 @@ private:
     QPushButton *m_pbModels;
     QPushButton *m_pbMaterials;
 #ifdef QT_DEBUG
-    QPushButton *m_pbCreateDb;
+    QPushButton *m_pbCreateTables;
     QPushButton *m_pbFillDb;
 #endif
 

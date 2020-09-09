@@ -29,6 +29,7 @@ SOURCES += \
     PopulateDatabase.cpp \
     dialogs/Colors_Box.cpp \
     dialogs/Materials_Box.cpp \
+    dialogs/Models_Box.cpp \
     dialogs/Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     PopulateDatabase.h \
     dialogs/Colors_Box.h \
     dialogs/Materials_Box.h \
+    dialogs/Models_Box.h \
     dialogs/Warehouse.h \
         mainwindow.h \
         appconsts.h

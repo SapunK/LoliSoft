@@ -7,17 +7,17 @@
 namespace PopulateDatabase_NS {
 static const char* CREATE_COLORS_QUERY = "CREATE TABLE public.colors "
                                          "(id serial NOT NULL,"
-                                         "color varchar(50) NOT NULL,"
+                                         "color varchar(50) NOT NULL UNIQUE,"
                                          "PRIMARY KEY (id));";
 
 static const char* CREATE_MATERIALS_QUERY = "CREATE TABLE public.materials "
                                             "(id serial NOT NULL, "
-                                            "material varchar(50) NOT NULL, "
+                                            "material varchar(50) NOT NULL UNIQUE, "
                                             "PRIMARY KEY (id));";
 
 static const char* CREATE_MODELS_QUERY = "CREATE TABLE public.models"
                                          "(id serial NOT NULL, "
-                                         "model varchar(50) NOT NULL, "
+                                         "model varchar(50) NOT NULL UNIQUE, "
                                          "PRIMARY KEY (id));";
 
 //code integer, can be null (maybe varchar is needed for code?)
