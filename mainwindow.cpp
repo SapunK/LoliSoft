@@ -11,12 +11,12 @@
 #include <QShortcut>
 
 #include "Warehouse.h"
-#include "Colors_Box.h"
+#include "ColorsBox.h"
 #include "appconsts.h"
 #include "HelperFunctions.h"
 #include "PopulateDatabase.h"
-#include "Materials_Box.h"
-#include "Models_Box.h"
+#include "MaterialsBox.h"
+#include "ModelsBox.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_leSearch, &QLineEdit::returnPressed, this, &MainWindow::slotSearch);
 
     connect(m_pbColors, &QAbstractButton::clicked, this, [this](){
-       Colors_Box *box = new Colors_Box(m_mainWidget);
+       ColorsBox *box = new ColorsBox(m_mainWidget);
        box->show();
     });
     connect(m_pbWarehouse, &QAbstractButton::clicked, this, [this](){
@@ -46,11 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
         box->show();
     });
     connect(m_pbMaterials, &QAbstractButton::clicked, this, [this](){
-        Materials_Box *box = new Materials_Box(this);
+        MaterialsBox *box = new MaterialsBox(this);
         box->show();
     });
     connect(m_pbModels, &QAbstractButton::clicked, this, [this](){
-        Models_Box *box = new Models_Box(this);
+        ModelsBox *box = new ModelsBox(this);
         box->show();
     });
 }

@@ -27,9 +27,10 @@ CONFIG += c++11
 SOURCES += \
     HelperFunctions.cpp \
     PopulateDatabase.cpp \
-    dialogs/Colors_Box.cpp \
-    dialogs/Materials_Box.cpp \
-    dialogs/Models_Box.cpp \
+    dialogs/ColorsBox.cpp \
+    dialogs/GeneralDialog.cpp \
+    dialogs/MaterialsBox.cpp \
+    dialogs/ModelsBox.cpp \
     dialogs/Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -38,9 +39,10 @@ SOURCES += \
 HEADERS += \
     HelperFunctions.h \
     PopulateDatabase.h \
-    dialogs/Colors_Box.h \
-    dialogs/Materials_Box.h \
-    dialogs/Models_Box.h \
+    dialogs/ColorsBox.h \
+    dialogs/GeneralDialog.h \
+    dialogs/MaterialsBox.h \
+    dialogs/ModelsBox.h \
     dialogs/Warehouse.h \
         mainwindow.h \
         appconsts.h
