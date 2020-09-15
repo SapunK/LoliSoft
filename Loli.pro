@@ -30,6 +30,7 @@ SOURCES += \
     custom_widgets/CustomTableView.cpp \
     dialogs/ColorsBox.cpp \
     dialogs/GeneralDialog.cpp \
+    dialogs/GoodsEntryExit.cpp \
     dialogs/MaterialsBox.cpp \
     dialogs/ModelsBox.cpp \
     dialogs/Warehouse.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     custom_widgets/CustomTableView.h \
     dialogs/ColorsBox.h \
     dialogs/GeneralDialog.h \
+    dialogs/GoodsEntryExit.h \
     dialogs/MaterialsBox.h \
     dialogs/ModelsBox.h \
     dialogs/Warehouse.h \

@@ -22,6 +22,7 @@ private:
 
     void setupForm();
     void dbConnect();
+    void connectWidgets();
 
     QWidget *m_mainWidget;
 
@@ -30,6 +31,7 @@ private:
     QPushButton *m_pbColors;
     QPushButton *m_pbModels;
     QPushButton *m_pbMaterials;
+    QPushButton *m_pbEntryExitGoods;
 #ifdef QT_DEBUG
     QPushButton *m_pbCreateTables;
     QPushButton *m_pbFillDb;

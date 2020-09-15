@@ -25,6 +25,15 @@ const char* PRICE = "Price";
 const char* STOCK = "Stock";
 const char* CODE = "Code";
 const char* ID = "ID";
+const char* ENTRY_PRICE = "Entry price";
+const char* REBATE = "Rebate";
+const char* REBATE_PCT = "Rebate %";
+const char* TAX = "Tax";
+const char* TAX_PCT = "Tax %";
+const char* DISCOUNT = "Discount";
+const char* SALE_PRICE = "Sale price";
+const char* PRICE_DIFF = "Price difference";
+const char* ENTRY_EXIT_GOODS = "Entry/exit of goods";
 
 ///DIMENSIONS
 //TODO get rid of fixed px for fonts

@@ -28,6 +28,15 @@ extern const char* PRICE;
 extern const char* STOCK;
 extern const char* CODE;
 extern const char* ID;
+extern const char* ENTRY_PRICE;
+extern const char* REBATE;
+extern const char* REBATE_PCT;
+extern const char* TAX;
+extern const char* TAX_PCT;
+extern const char* DISCOUNT;
+extern const char* SALE_PRICE;
+extern const char* PRICE_DIFF;
+extern const char* ENTRY_EXIT_GOODS;
 
 ///DIMENSIONS
 
