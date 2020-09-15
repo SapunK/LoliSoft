@@ -17,6 +17,9 @@ private:
     static void createShoes();
     static void createMaterials();
     static void createModels();
+    static void createItems();
+    static void createDocuments();
+    static void createDocTypes();
 
     static void fillColors();
     static void fillModels();

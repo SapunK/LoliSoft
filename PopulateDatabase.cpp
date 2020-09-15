@@ -20,6 +20,44 @@ static const char* CREATE_MODELS_QUERY = "CREATE TABLE public.models"
                                          "model varchar(50) NOT NULL UNIQUE, "
                                          "PRIMARY KEY (id));";
 
+static const char* CREATE_ITEMS_QUERY = "CREATE TABLE public.items"
+                                        "(id serial NOT NULL, "
+                                        "doc_id numeric NOT NULL, "
+                                        "shoe_id integer NOT NULL, "
+                                        "size integer NOT NULL, "
+                                        "entry_price numeric NOT NULL, "
+                                        "rebate numeric NOT NULL, "
+                                        "rebate_percentage numeric NOT NULL, "
+                                        "tax numeric NOT NULL, "
+                                        "tax_percentage numeric NOT NULL, "
+                                        "sale_price numeric NOT NULL, "
+                                        "discount numeric NOT NULL, "
+                                        "price_difference numeric NOT NULL, "
+                                        "quantity numeric NOT NULL, "
+                                        "date timestamp NOT NULL DEFAULT NOW(), "
+                                        "updated timestamp NOT NULL DEFAULT NOW(), "
+                                        "PRIMARY KEY (id));";
+
+static const char* CREATE_DOCUMENTS_QUERY = "CREATE TABLE public.documents"
+                                            "(id serial NOT NULL, "
+                                            "doc_type_id numeric NOT NULL, "
+                                            "entry_price numeric NOT NULL, "
+                                            "rebate numeric NOT NULL, "
+                                            "rebate_percentage numeric NOT NULL, "
+                                            "tax numeric NOT NULL, "
+                                            "tax_percentage numeric NOT NULL, "
+                                            "sale_price numeric NOT NULL, "
+                                            "price_difference numeric NOT NULL, "
+                                            "date timestamp NOT NULL DEFAULT NOW(), "
+                                            "updated timestamp NOT NULL DEFAULT NOW(), "
+                                            "PRIMARY KEY (id));";
+
+static const char* CREATE_DOCUMENT_TYPES_QUERY = "CREATE TABLE public.doc_types"
+                                                 "(id serial NOT NULL, "
+                                                 "doc_name varchar(50) NOT NULL, "
+                                                 "affects boolean NOT NULL, "
+                                                 "PRIMARY KEY (id));";
+
 //code integer, can be null (maybe varchar is needed for code?)
 static const char* CREATE_SHOES_QUERY = "CREATE TABLE public.shoes("
                                         "id serial NOT NULL, "
@@ -27,7 +65,6 @@ static const char* CREATE_SHOES_QUERY = "CREATE TABLE public.shoes("
                                         "color integer NOT NULL, "
                                         "model integer NOT NULL, "
                                         "material integer NOT NULL, "
-                                        "size numeric NOT NULL, "
                                         "price numeric NOT NULL, "
                                         "PRIMARY KEY (id), "
                                         "CONSTRAINT color FOREIGN KEY (color) "
@@ -128,6 +165,33 @@ void PopulateDatabase::createModels()
     if(!q.exec(CREATE_MODELS_QUERY))
     {
         qWarning()<<"Unable to create table models, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
+    }
+}
+
+void PopulateDatabase::createItems()
+{
+    QSqlQuery q;
+    if(!q.exec(CREATE_ITEMS_QUERY))
+    {
+        qWarning()<<"Unable to create table items, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
+    }
+}
+
+void PopulateDatabase::createDocuments()
+{
+    QSqlQuery q;
+    if(!q.exec(CREATE_DOCUMENTS_QUERY))
+    {
+        qWarning()<<"Unable to create table documents, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
+    }
+}
+
+void PopulateDatabase::createDocTypes()
+{
+    QSqlQuery q;
+    if(!q.exec(CREATE_DOCUMENT_TYPES_QUERY))
+    {
+        qWarning()<<"Unable to create table doctypes, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
     }
 }
 /*-----------------------------------------------------_CREATE DATABASE_-------------------------------------------*/
