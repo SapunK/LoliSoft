@@ -5,10 +5,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlQueryModel>
-#include <QTableView>
 #include <QDebug>
 
 #include "appconsts.h"
+#include "custom_widgets/CustomTableView.h"
 
 namespace Models_Box_NS{
 static const char* SEARCH_MODELS_PLACEHOLDER = "Search by model";

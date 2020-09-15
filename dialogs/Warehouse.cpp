@@ -2,13 +2,13 @@
 
 #include <QShortcut>
 #include <QSqlQueryModel>
-#include <QTableView>
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QSqlQuery>
 
 #include "appconsts.h"
 #include "HelperFunctions.h"
+#include "custom_widgets/CustomTableView.h"
 
 using namespace Warehouse_NS;
 Warehouse::Warehouse(QWidget *parent)
@@ -29,8 +29,7 @@ void Warehouse::setupForm()
     HelperFunctions::setWidgetProperties(*m_leSearch);
 
     m_model = new QSqlQueryModel(this);
-    m_table = new QTableView(this);
-    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table = new CustomTableView(this);
     m_table->setModel(m_model);
 
     mainLayout->addWidget(m_leSearch, 1, 0, 1, 3);

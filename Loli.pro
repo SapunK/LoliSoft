@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
     HelperFunctions.cpp \
     PopulateDatabase.cpp \
+    custom_widgets/CustomTableView.cpp \
     dialogs/ColorsBox.cpp \
     dialogs/GeneralDialog.cpp \
     dialogs/MaterialsBox.cpp \
@@ -39,6 +40,7 @@ SOURCES += \
 HEADERS += \
     HelperFunctions.h \
     PopulateDatabase.h \
+    custom_widgets/CustomTableView.h \
     dialogs/ColorsBox.h \
     dialogs/GeneralDialog.h \
     dialogs/MaterialsBox.h \

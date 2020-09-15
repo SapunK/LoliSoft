@@ -7,10 +7,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlQueryModel>
-#include <QTableView>
 #include <QDebug>
 
 #include "appconsts.h"
+#include "custom_widgets/CustomTableView.h"
 
 GeneralDialog::GeneralDialog(QWidget *parent)
     : QDialog(parent)
@@ -32,9 +32,7 @@ void GeneralDialog::setupForm()
 {
     m_model = new QSqlQueryModel(this);
 
-    m_table = new QTableView(this);
-    m_table->setSelectionMode(QTableView::SingleSelection);
-    m_table->setSelectionBehavior(QTableView::SelectRows);
+    m_table = new CustomTableView(this);
     m_table->setModel(m_model);
 
     m_leSearch = new QLineEdit(this);

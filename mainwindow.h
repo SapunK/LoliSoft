@@ -7,6 +7,7 @@ class QPushButton;
 class QSqlQueryModel;
 class QTableView;
 class QLineEdit;
+class CustomTableView;
 
 class MainWindow : public QMainWindow
 {
@@ -35,7 +36,7 @@ private:
 #endif
 
     QSqlQueryModel *m_model;
-    QTableView *m_table;
+    CustomTableView *m_table;
 
     QLineEdit *m_leSearch;
 

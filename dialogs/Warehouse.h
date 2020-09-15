@@ -5,7 +5,7 @@
 
 class QLineEdit;
 class QSqlQueryModel;
-class QTableView;
+class CustomTableView;
 
 namespace Warehouse_NS{
 enum columns{
@@ -36,7 +36,7 @@ protected:
     QLineEdit *m_leSearch;
 
     QSqlQueryModel *m_model;
-    QTableView *m_table;
+    CustomTableView *m_table;
 signals:
 
 public slots:

@@ -4,8 +4,8 @@
 #include <QDialog>
 
 class QLineEdit;
-class QTableView;
 class QSqlQueryModel;
+class CustomTableView;
 
 
 class GeneralDialog : public QDialog
@@ -24,7 +24,7 @@ protected:
     QPushButton *m_pbClose;
     QPushButton *m_pbDelete;
 
-    QTableView *m_table;
+    CustomTableView *m_table;
     QSqlQueryModel *m_model;
 
 protected slots:

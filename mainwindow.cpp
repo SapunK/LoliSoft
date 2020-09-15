@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
-#include <QTableView>
 #include <QDebug>
 #include <QShortcut>
 
@@ -17,6 +16,7 @@
 #include "PopulateDatabase.h"
 #include "MaterialsBox.h"
 #include "ModelsBox.h"
+#include "custom_widgets/CustomTableView.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     dbConnect();
+    HelperFunctions::setDesktopSize();
     setupForm();
 
     connect(m_leSearch, &QLineEdit::returnPressed, this, &MainWindow::slotSearch);
@@ -62,8 +63,6 @@ void MainWindow::setupForm()
     QVBoxLayout *vLayoutButtons = new QVBoxLayout;
     QVBoxLayout *vLayoutTable = new QVBoxLayout;
 
-    HelperFunctions::setDesktopSize();
-
     //    QFile stylesheet(":/style/styles.css");
     //    stylesheet.open(QIODevice::ReadOnly);
     //    QTextStream ts(&stylesheet);
@@ -84,10 +83,8 @@ void MainWindow::setupForm()
     }
 
     m_model = new QSqlQueryModel(this);
-    //TODO create a custom table class
-    m_table = new QTableView(this);
-    m_table->setSelectionMode(QTableView::SingleSelection);
-    m_table->setSelectionBehavior(QTableView::SelectRows);
+
+    m_table = new CustomTableView(this);
     m_table->setModel(m_model);
 
     //TODO create a new model and use it here and in warehouse

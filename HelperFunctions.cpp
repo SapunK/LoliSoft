@@ -48,6 +48,6 @@ int HelperFunctions::desktopHeight()
 void HelperFunctions::setDesktopSize()
 {
     //FIXME for two or more screens (probably get the dimensions of the main screen)
-    m_desktopWidth = qApp->desktop()->width();
+    m_desktopWidth = /*qApp->desktop()->width()*/1920;
     m_desktopHeight = qApp->desktop()->height();
 }
