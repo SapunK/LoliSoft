@@ -6,6 +6,9 @@
 class QPushButton;
 class QLineEdit;
 class QDateEdit;
+class QComboBox;
+class CustomTableView;
+class QSqlQueryModel;
 
 class GoodsEntryExit : public QDialog
 {
@@ -16,13 +19,14 @@ public:
 private:
 
     QPushButton *m_pbNewDoc;
-    QPushButton *m_pbInsertDoc;
+    QPushButton *m_pbSaveDoc;
     QPushButton *m_pbNewItem;
     QPushButton *m_pbEditItem;
     QPushButton *m_pbDeleteItem;
+    QPushButton *m_pbSaveItem;
 
-    QLineEdit *m_leDocName;
     QLineEdit *m_leDocNumber;
+    QLineEdit *m_leShoe;
     QLineEdit *m_leEntryPrice;
     QLineEdit *m_leRebate;
     QLineEdit *m_leRebatePct;
@@ -34,8 +38,19 @@ private:
 
     QDateEdit *m_deDate;
 
-    void setupForm();
+    QComboBox *m_cbDocName;
 
+    CustomTableView *m_table;
+    QSqlQueryModel *m_model;
+
+    QVector<QWidget *> m_vItemWidgets;
+
+    void setupForm();
+    void showHideItemWidgets(bool hide);
+    void connectWidgets();
+
+private slots:
+    void setDocNumber();
 };
 
 #endif // GOODSENTRYEXIT_H

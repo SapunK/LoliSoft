@@ -25,6 +25,7 @@ private:
     static void fillModels();
     static void fillMaterials();
     static void fillShoes();
+    static void fillDocTypes();
 };
 #endif //QT_DEBUG
 #endif // POPULATEDATABASE_H

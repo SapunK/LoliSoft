@@ -104,6 +104,10 @@ static const char* INSERT_SHOES = "INSERT INTO shoes (code, color, model, materi
                                   "INSERT INTO shoes (code, color, model, material, size, price) VALUES (345, 2, 1, 2, 42, 1300);"
                                   "INSERT INTO shoes (code, color, model, material, size, price) VALUES (456, 3, 2, 1, 39, 1900);"
                                   "INSERT INTO shoes (code, color, model, material, size, price) VALUES (567, 1, 3, 3, 43, 2000);";
+
+static const char* INSERT_DOC_TYPES = "INSERT INTO doc_types (doc_name, affects) VALUES ('receipt invoice', true);"
+                                      "INSERT INTO doc_types (doc_name, affects) VALUES ('delivery invoice', false);"
+                                      "INSERT INTO doc_types (doc_name, affects) VALUES ('bill', false);";
 }
 
 using namespace PopulateDatabase_NS;
@@ -120,15 +124,18 @@ void PopulateDatabase::createDatabase()
     createMaterials();
     createModels();
     createShoes();
+    createItems();
+    createDocTypes();
+    createDocuments();
 }
 
-//TODO test fill functions
 void PopulateDatabase::fillDatabase()
 {
     fillColors();
     fillModels();
     fillMaterials();
     fillShoes();
+    fillDocTypes();
 }
 /*-----------------------------------------------------_PUBLIC FUNCTIONS_-------------------------------------------*/
 
@@ -232,6 +239,15 @@ void PopulateDatabase::fillShoes()
     if(!q.exec(INSERT_SHOES))
     {
         qWarning()<<"Unable to insert into shoes, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
+    }
+}
+
+void PopulateDatabase::fillDocTypes()
+{
+    QSqlQuery q;
+    if(!q.exec(INSERT_DOC_TYPES))
+    {
+        qWarning()<<"Unable to insert into doc_types, error: "<<q.lastError()<<" lastquery: "<<q.lastQuery();
     }
 }
 /*-----------------------------------------------------_FILL DATABASE_-------------------------------------------*/

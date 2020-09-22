@@ -37,9 +37,10 @@ extern const char* DISCOUNT;
 extern const char* SALE_PRICE;
 extern const char* PRICE_DIFF;
 extern const char* ENTRY_EXIT_GOODS;
+extern const char* DATE;
+extern const char* DATE_FORMAT;
 
 ///DIMENSIONS
-
 extern const char* PB_FONTSIZE;
 extern const char* SEARCHLE_FONTSIZE;
 extern const char* FONT_WEIGHT_BOLD;
