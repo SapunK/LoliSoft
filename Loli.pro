@@ -27,6 +27,8 @@ CONFIG += c++11
 SOURCES += \
     HelperFunctions.cpp \
     PopulateDatabase.cpp \
+    custom_widgets/CustomDoubleLE.cpp \
+    custom_widgets/CustomIntLE.cpp \
     custom_widgets/CustomTableView.cpp \
     dialogs/ColorsBox.cpp \
     dialogs/GeneralDialog.cpp \
@@ -41,6 +43,8 @@ SOURCES += \
 HEADERS += \
     HelperFunctions.h \
     PopulateDatabase.h \
+    custom_widgets/CustomDoubleLE.h \
+    custom_widgets/CustomIntLE.h \
     custom_widgets/CustomTableView.h \
     dialogs/ColorsBox.h \
     dialogs/GeneralDialog.h \

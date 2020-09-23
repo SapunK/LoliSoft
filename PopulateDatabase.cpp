@@ -34,7 +34,7 @@ static const char* CREATE_ITEMS_QUERY = "CREATE TABLE public.items"
                                         "discount numeric NOT NULL, "
                                         "price_difference numeric NOT NULL, "
                                         "quantity numeric NOT NULL, "
-                                        "date timestamp NOT NULL DEFAULT NOW(), "
+                                        "datetime timestamp NOT NULL DEFAULT NOW(), "
                                         "updated timestamp NOT NULL DEFAULT NOW(), "
                                         "PRIMARY KEY (id));";
 
@@ -42,14 +42,14 @@ static const char* CREATE_DOCUMENTS_QUERY = "CREATE TABLE public.documents"
                                             "(id serial NOT NULL, "
                                             "doc_type_id numeric NOT NULL, "
                                             "doc_number numeric NOT NULL, "
-                                            "entry_price numeric NOT NULL, "
-                                            "rebate numeric NOT NULL, "
-                                            "rebate_percentage numeric NOT NULL, "
-                                            "tax numeric NOT NULL, "
-                                            "tax_percentage numeric NOT NULL, "
-                                            "sale_price numeric NOT NULL, "
-                                            "price_difference numeric NOT NULL, "
-                                            "date timestamp NOT NULL DEFAULT NOW(), "
+                                            "entry_price numeric, "
+                                            "rebate numeric, "
+                                            "rebate_percentage numeric, "
+                                            "tax numeric, "
+                                            "tax_percentage numeric, "
+                                            "sale_price numeric, "
+                                            "price_difference numeric, "
+                                            "datetime timestamp NOT NULL DEFAULT NOW(), "
                                             "updated timestamp NOT NULL DEFAULT NOW(), "
                                             "PRIMARY KEY (id));";
 
@@ -99,11 +99,11 @@ static const char* INSERT_MODELS = "INSERT INTO models (model) VALUES ('ballet')
                                    "INSERT INTO models (model) VALUES ('espadrille');"
                                    "INSERT INTO models (model) VALUES ('derby');";
 
-static const char* INSERT_SHOES = "INSERT INTO shoes (code, color, model, material, size, price) VALUES (123, 1, 1, 1, 40, 1500);"
-                                  "INSERT INTO shoes (code, color, model, material, size, price) VALUES (234, 1, 2, 3, 41, 1200);"
-                                  "INSERT INTO shoes (code, color, model, material, size, price) VALUES (345, 2, 1, 2, 42, 1300);"
-                                  "INSERT INTO shoes (code, color, model, material, size, price) VALUES (456, 3, 2, 1, 39, 1900);"
-                                  "INSERT INTO shoes (code, color, model, material, size, price) VALUES (567, 1, 3, 3, 43, 2000);";
+static const char* INSERT_SHOES = "INSERT INTO shoes (code, color, model, material, price) VALUES (123, 1, 1, 1, 1500);"
+                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (234, 1, 2, 3, 1200);"
+                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (345, 2, 1, 2, 1300);"
+                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (456, 3, 2, 1, 1900);"
+                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (567, 1, 3, 3, 2000);";
 
 static const char* INSERT_DOC_TYPES = "INSERT INTO doc_types (doc_name, affects) VALUES ('receipt invoice', true);"
                                       "INSERT INTO doc_types (doc_name, affects) VALUES ('delivery invoice', false);"

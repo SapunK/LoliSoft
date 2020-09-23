@@ -9,6 +9,8 @@ class QDateEdit;
 class QComboBox;
 class CustomTableView;
 class QSqlQueryModel;
+class CustomDoubleLE;
+class CustomIntLE;
 
 class GoodsEntryExit : public QDialog
 {
@@ -25,16 +27,20 @@ private:
     QPushButton *m_pbDeleteItem;
     QPushButton *m_pbSaveItem;
 
-    QLineEdit *m_leDocNumber;
     QLineEdit *m_leShoe;
-    QLineEdit *m_leEntryPrice;
-    QLineEdit *m_leRebate;
-    QLineEdit *m_leRebatePct;
-    QLineEdit *m_leTax;
-    QLineEdit *m_leTaxPct;
-    QLineEdit *m_leDiscount;
-    QLineEdit *m_leSalePrice;
-    QLineEdit *m_lePriceDiff;
+    QLineEdit *m_leDocNumber;
+
+    CustomIntLE *m_leRebatePct;
+    CustomIntLE *m_leTaxPct;
+    CustomIntLE *m_leMarginPct;
+
+    CustomDoubleLE *m_leEntryPrice;
+    CustomDoubleLE *m_leRebate;
+    CustomDoubleLE *m_leTax;
+    CustomDoubleLE *m_leMargin;
+    CustomDoubleLE *m_leDiscount;
+    CustomDoubleLE *m_leSalePrice;
+    CustomDoubleLE *m_lePriceDiff;
 
     QDateEdit *m_deDate;
 

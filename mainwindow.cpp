@@ -113,8 +113,8 @@ void MainWindow::setupForm()
 
 void MainWindow::slotSearch()
 {
-    //TODO add stock
-    QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.size, s.price "
+    //TODO add stock, size
+    QString modelQuery = "SELECT s.code, c.color, ma.material, mo.model, s.price "
                          "FROM shoes s "
                          "INNER JOIN colors c on s.color = c.id "
                          "INNER JOIN materials ma on s.material = ma.id "
@@ -128,7 +128,7 @@ void MainWindow::slotSearch()
                                   "mo.model ilike '%1%' ").arg(m_leSearch->text()));
 
         if(madeOfNumbers){
-            modelQuery.append(QString("OR s.code = %1 OR s.size = %1").arg(codeSize));
+            modelQuery.append(QString("OR s.code = %1").arg(codeSize));
         }
     }
     m_model->setQuery(modelQuery);
