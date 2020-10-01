@@ -51,3 +51,12 @@ void HelperFunctions::setDesktopSize()
     m_desktopWidth = /*qApp->desktop()->width()*/1920;
     m_desktopHeight = qApp->desktop()->height();
 }
+
+void HelperFunctions::setTabOrder(QWidget *w, QVector<QWidget *> vWidgets)
+{
+    for(int i = 0 ; i < vWidgets.size() - 1 ; i++)
+    {
+        w->setTabOrder(vWidgets.at(i), vWidgets.at(i + 1));
+    }
+
+}

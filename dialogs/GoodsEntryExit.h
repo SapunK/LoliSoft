@@ -19,6 +19,8 @@ public:
     explicit GoodsEntryExit(QWidget *parent = nullptr);
 
 private:
+    
+    int m_docId;
 
     QPushButton *m_pbNewDoc;
     QPushButton *m_pbSaveDoc;
@@ -30,9 +32,8 @@ private:
     QLineEdit *m_leShoe;
     QLineEdit *m_leDocNumber;
 
-    CustomIntLE *m_leRebatePct;
-    CustomIntLE *m_leTaxPct;
-    CustomIntLE *m_leMarginPct;
+    CustomIntLE *m_leSize;
+    CustomIntLE *m_leQuantity;
 
     CustomDoubleLE *m_leEntryPrice;
     CustomDoubleLE *m_leRebate;
@@ -41,6 +42,9 @@ private:
     CustomDoubleLE *m_leDiscount;
     CustomDoubleLE *m_leSalePrice;
     CustomDoubleLE *m_lePriceDiff;
+    CustomDoubleLE *m_leRebatePct;
+    CustomDoubleLE *m_leTaxPct;
+    CustomDoubleLE *m_leMarginPct;
 
     QDateEdit *m_deDate;
 
@@ -54,9 +58,12 @@ private:
     void setupForm();
     void showHideItemWidgets(bool hide);
     void connectWidgets();
+    bool validateItem();
+    void clearItemFields();
 
 private slots:
     void setDocNumber();
+    void insertItem();
 };
 
 #endif // GOODSENTRYEXIT_H

@@ -54,6 +54,7 @@ void MainWindow::setupForm()
     m_leSearch = new QLineEdit(this);
     HelperFunctions::setWidgetProperties(*m_leSearch);
 
+    //TODO fix focus
     m_pbWarehouse = new QPushButton(WAREHOUSE, this);
     m_pbSell = new QPushButton(SELL, this);
     m_pbColors = new QPushButton(COLORS, this);

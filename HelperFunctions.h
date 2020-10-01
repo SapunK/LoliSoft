@@ -3,6 +3,8 @@
 
 class QWidget;
 
+#include <QVector>
+
 class HelperFunctions
 {
 public:
@@ -13,6 +15,7 @@ public:
     static int desktopHeight();
 
     static void setDesktopSize();
+    static void setTabOrder(QWidget *w, QVector<QWidget*> vWidgets);
 
 private:
     static int m_desktopWidth;
