@@ -67,6 +67,7 @@ void GoodsEntryExit::setupForm()
     QGridLayout *mainLayout = new QGridLayout(this);
 
     m_pbNewDoc = new QPushButton(NEW_DOC, this);
+    m_pbNewDoc->setDisabled(true);
     m_pbSaveDoc = new QPushButton(SAVE_DOC, this);
     m_pbNewItem = new QPushButton(NEW_ITEM, this);
     m_pbNewItem->setDisabled(true);
@@ -77,22 +78,36 @@ void GoodsEntryExit::setupForm()
     m_pbSaveItem = new QPushButton(SAVE_ITEM, this);
 
     m_leShoe = new QLineEdit(this);
+    m_leShoe->setAccessibleName(SHOE);
     m_leDocNumber = new QLineEdit(this);
     m_leDocNumber->setDisabled(true);
 
     m_leSize = new CustomIntLE(this);
+    m_leSize->setAccessibleName(SIZE);
     m_leQuantity = new CustomIntLE(this);
+    m_leQuantity->setAccessibleName(QUANTITY);
 
     m_leEntryPrice = new CustomDoubleLE(this);
+    m_leEntryPrice->setAccessibleName(ENTRY_PRICE);
     m_leRebate = new CustomDoubleLE(this);
+    m_leRebate->setAccessibleName(REBATE);
     m_leTax = new CustomDoubleLE(this);
+    m_leTax->setDisabled(true);
+    m_leTax->setAccessibleName(TAX);
     m_leMargin = new CustomDoubleLE(this);
+    m_leMargin->setAccessibleName(MARGIN);
     m_leDiscount = new CustomDoubleLE(this);
+    m_leDiscount->setAccessibleName(DISCOUNT);
     m_leSalePrice = new CustomDoubleLE(this);
+    m_leSalePrice->setAccessibleName(SALE_PRICE);
     m_lePriceDiff = new CustomDoubleLE(this);
+    m_lePriceDiff->setAccessibleName(PRICE_DIFF);
     m_leRebatePct = new CustomDoubleLE(this);
+    m_leRebatePct->setAccessibleName(REBATE_PCT);
     m_leTaxPct = new CustomDoubleLE(this);
+    m_leTaxPct->setAccessibleName(TAX_PCT);
     m_leMarginPct = new CustomDoubleLE(this);
+    m_leMarginPct->setAccessibleName(MARGIN_PCT);
 
     QStringList completerList;
     QSqlQuery qCompleter;
@@ -116,6 +131,10 @@ void GoodsEntryExit::setupForm()
     m_cbDocName->setModel(docNameModel);
     m_cbDocName->setEditable(false);
 
+    connect(m_cbDocName, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        m_pbNewDoc->setDisabled(m_cbDocName->currentText().isEmpty());
+    });
+
     m_table = new CustomTableView(this);
     m_model = new QSqlQueryModel(this);
     m_table->setModel(m_model);
@@ -137,10 +156,17 @@ void GoodsEntryExit::setupForm()
     QLabel *lbPriceDiff = new QLabel(PRICE_DIFF, this);
     QLabel *lbDate = new QLabel(DATE, this);
 
-    m_vItemWidgets<<m_leShoe<<m_leSize<<m_leQuantity<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<
+    m_vItemWidgets<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<
                     m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
-                    m_leDiscount<<m_lePriceDiff<<m_leSalePrice<<m_pbSaveItem;
+                    m_leDiscount<<m_lePriceDiff<<m_leSalePrice;
 
+    for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
+    {
+        connect(static_cast<QLineEdit*>(m_vItemWidgets.at(i)), &QLineEdit::editingFinished, this, &GoodsEntryExit::updateFields);
+    }
+
+    //We don't need these for the connect above
+    m_vItemWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity;
     HelperFunctions::setTabOrder(this, m_vItemWidgets);
 
     m_vItemWidgets<<lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
@@ -237,85 +263,43 @@ void GoodsEntryExit::connectWidgets()
 
 bool GoodsEntryExit::validateItem()
 {
-    if(m_leShoe->text().isEmpty())
+    for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
     {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(SHOE));
-        return false;
+        if(m_vItemWidgets.at(i)->metaObject()->className() == QString("QLineEdit")
+                && !m_vItemWidgets.at(i)->accessibleName().isEmpty()
+                && static_cast<QLineEdit*>(m_vItemWidgets.at(i))->text().isEmpty())
+        {
+            QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + ": " + m_vItemWidgets.at(i)->accessibleName());
+            return false;
+        }
     }
-    
-    if(m_leRebatePct->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + ": " + QString(REBATE_PCT));
-        return false;
-    }
-    
-    if(m_leTaxPct->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(TAX_PCT));
-        return false;
-    }
-    
-    if(m_leMarginPct->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(MARGIN_PCT));
-        return false;
-    }
-    
-    if(m_leEntryPrice->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(ENTRY_PRICE));
-        return false;
-    }
-    
-    if(m_leRebate->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(REBATE));
-        return false;
-    }
-    if(m_leTax->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(TAX));
-        return false;
-    }
-    if(m_leMargin->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(MARGIN));
-        return false;
-    }
-    if(m_leDiscount->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(DISCOUNT));
-        return false;
-    }
-    if(m_leSalePrice->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(SALE_PRICE));
-        return false;
-    }
-    if(m_lePriceDiff->text().isEmpty())
-    {
-        QMessageBox::warning(this, MSG_ERROR, QString(EMPTY_FIELD) + QString(PRICE_DIFF));
-        return false;
-    }
-    
     return true;
 }
 
 void GoodsEntryExit::clearItemFields()
 {
-    m_leShoe->clear();
-    m_leSize->clear();
-    m_leQuantity->clear();
-    m_leEntryPrice->clear();
-    m_leRebate->clear();
-    m_leRebatePct->clear();
-    m_leTax->clear();
-    m_leTaxPct->clear();
-    m_leMargin->clear();
-    m_leMarginPct->clear();
-    m_leDiscount->clear();
-    m_lePriceDiff->clear();
-    m_leSalePrice->clear();
+    for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
+    {
+        if(m_vItemWidgets.at(i)->metaObject()->className() == QString("QLineEdit"))
+        {
+            static_cast<QLineEdit*>(m_vItemWidgets.at(i))->clear();
+        }
+    }
+}
+
+void GoodsEntryExit::updateFields()
+{
+    double entryPrice = m_leEntryPrice->value();
+    //TODO figure it out after adding entry price after rebate field
+//    if(sender() == m_leRebate)
+//    {
+
+//    }
+//    if(sender() == m_leRebatePct)
+//    {
+
+//    }
+
 }
 
 void GoodsEntryExit::setDocNumber()
@@ -325,9 +309,10 @@ void GoodsEntryExit::setDocNumber()
         q.exec(Q_LAST_DOC_NUM);
         q.next();
         m_leDocNumber->setText(q.value(0).toString());
+        m_docId = q.value(0).toInt();
         if(!q.exec(Q_INSERT_NEW_DOC
                   .arg(m_cbDocName->model()->index(m_cbDocName->currentIndex(), 1).data().toInt())
-                  .arg(m_leDocNumber->text().toInt())
+                  .arg(m_docId)
                   .arg(QDateTime::currentDateTime().toString(Qt::ISODate))))
         {
             QMessageBox::critical(this, MSG_ERROR, ERR_CONTACT_ADMINISTRATOR);
@@ -336,7 +321,7 @@ void GoodsEntryExit::setDocNumber()
             return;
         }
         m_pbNewItem->setEnabled(true);
-        m_docId = q.value(0).toInt();
+
     }
 }
 

@@ -60,6 +60,7 @@ private:
     void connectWidgets();
     bool validateItem();
     void clearItemFields();
+    void updateFields();
 
 private slots:
     void setDocNumber();
