@@ -31,6 +31,7 @@ static const char* MARGIN = "Margin";
 static const char* MARGIN_PCT = "Margin %";
 static const char* SHOE = "Shoe";
 static const char* QUANTITY = "Quantity";
+static const char* AFTER_REBATE = "After rebate";
 
 static const char* Q_DOC_NAME_MODEL = "SELECT '' as doc_name, 0 as doc_type_id "
                                       "UNION "
@@ -91,6 +92,7 @@ void GoodsEntryExit::setupForm()
     m_leEntryPrice->setAccessibleName(ENTRY_PRICE);
     m_leRebate = new CustomDoubleLE(this);
     m_leRebate->setAccessibleName(REBATE);
+    //TODO probably make a combo for tax or fixed 18%?
     m_leTax = new CustomDoubleLE(this);
     m_leTax->setDisabled(true);
     m_leTax->setAccessibleName(TAX);
@@ -108,6 +110,8 @@ void GoodsEntryExit::setupForm()
     m_leTaxPct->setAccessibleName(TAX_PCT);
     m_leMarginPct = new CustomDoubleLE(this);
     m_leMarginPct->setAccessibleName(MARGIN_PCT);
+    m_lePrcAfterRebate = new CustomDoubleLE(this);
+    m_lePrcAfterRebate->setAccessibleName(AFTER_REBATE);
 
     QStringList completerList;
     QSqlQuery qCompleter;
@@ -155,10 +159,11 @@ void GoodsEntryExit::setupForm()
     QLabel *lbSalePrice = new QLabel(SALE_PRICE, this);
     QLabel *lbPriceDiff = new QLabel(PRICE_DIFF, this);
     QLabel *lbDate = new QLabel(DATE, this);
+    QLabel *lbAfterRebate = new QLabel(AFTER_REBATE, this);
 
     m_vItemWidgets<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<
                     m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
-                    m_leDiscount<<m_lePriceDiff<<m_leSalePrice;
+                    m_leDiscount<<m_lePriceDiff<<m_leSalePrice<<m_lePrcAfterRebate;
 
     for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
     {
@@ -170,7 +175,8 @@ void GoodsEntryExit::setupForm()
     HelperFunctions::setTabOrder(this, m_vItemWidgets);
 
     m_vItemWidgets<<lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
-                    lbDiscount<<lbSalePrice<<lbPriceDiff<<lbMarginPct<<lbMargin<<lbSize<<lbQuantity;
+                    lbDiscount<<lbSalePrice<<lbPriceDiff<<lbMarginPct<<
+                    lbMargin<<lbSize<<lbQuantity<<lbAfterRebate<<lbShoe;
 
     showHideItemWidgets(true);
 
@@ -204,19 +210,22 @@ void GoodsEntryExit::setupForm()
     mainLayout->addWidget(lbQuantity,       2, 6);
     mainLayout->addWidget(m_leQuantity,     2, 7);
 
-    mainLayout->addWidget(lbEntryPrice,     3, ++lColumns);
-    mainLayout->addWidget(m_leEntryPrice,   3, ++lColumns);
+    mainLayout->addWidget(lbEntryPrice,       3, ++lColumns);
+    mainLayout->addWidget(m_leEntryPrice,     3, ++lColumns);
 
-    mainLayout->addWidget(lbRebate,         3, ++lColumns);
-    mainLayout->addWidget(m_leRebate,       3, ++lColumns);
+    mainLayout->addWidget(lbRebate,           3, ++lColumns);
+    mainLayout->addWidget(m_leRebate,         3, ++lColumns);
 
-    mainLayout->addWidget(lbRebatePct,      3, ++lColumns);
-    mainLayout->addWidget(m_leRebatePct,    3, ++lColumns);
+    mainLayout->addWidget(lbRebatePct,        3, ++lColumns);
+    mainLayout->addWidget(m_leRebatePct,      3, ++lColumns);
 
-    mainLayout->addWidget(lbTax,            3, ++lColumns);
-    mainLayout->addWidget(m_leTax,          3, ++lColumns);
+    mainLayout->addWidget(lbAfterRebate,      3, ++lColumns);
+    mainLayout->addWidget(m_lePrcAfterRebate, 3, ++lColumns);
 
     lColumns = -1;
+
+    mainLayout->addWidget(lbTax,            4, ++lColumns);
+    mainLayout->addWidget(m_leTax,          4, ++lColumns);
 
     mainLayout->addWidget(lbTaxPct,         4, ++lColumns);
     mainLayout->addWidget(m_leTaxPct,       4, ++lColumns);
@@ -227,10 +236,10 @@ void GoodsEntryExit::setupForm()
     mainLayout->addWidget(lbMarginPct,      4, ++lColumns);
     mainLayout->addWidget(m_leMarginPct,    4, ++lColumns);
 
-    mainLayout->addWidget(lbDiscount,       4, ++lColumns);
-    mainLayout->addWidget(m_leDiscount,     4, ++lColumns);
-
     lColumns = -1;
+
+    mainLayout->addWidget(lbDiscount,       5, ++lColumns);
+    mainLayout->addWidget(m_leDiscount,     5, ++lColumns);
 
     mainLayout->addWidget(lbPriceDiff,      5, ++lColumns);
     mainLayout->addWidget(m_lePriceDiff,    5, ++lColumns);
@@ -290,15 +299,17 @@ void GoodsEntryExit::clearItemFields()
 void GoodsEntryExit::updateFields()
 {
     double entryPrice = m_leEntryPrice->value();
-    //TODO figure it out after adding entry price after rebate field
-//    if(sender() == m_leRebate)
-//    {
 
-//    }
-//    if(sender() == m_leRebatePct)
-//    {
+    if(sender() == m_leRebate)
+    {
+//        double rebatePct =
+    }
 
-//    }
+    if(sender() == m_leRebatePct)
+    {
+        double rebate = (m_leRebatePct->value() / 100) * entryPrice;
+        m_leRebate->setValue(rebate);
+    }
 
 }
 

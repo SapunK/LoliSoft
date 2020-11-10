@@ -43,6 +43,7 @@ private:
     CustomDoubleLE *m_leSalePrice;
     CustomDoubleLE *m_lePriceDiff;
     CustomDoubleLE *m_leRebatePct;
+    CustomDoubleLE *m_lePrcAfterRebate;
     CustomDoubleLE *m_leTaxPct;
     CustomDoubleLE *m_leMarginPct;
 

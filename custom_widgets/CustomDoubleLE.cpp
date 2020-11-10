@@ -22,6 +22,11 @@ double CustomDoubleLE::value()
     return text().toDouble();
 }
 
+void CustomDoubleLE::setValue(double value)
+{
+    setText(QString::number(value));
+}
+
 //void CustomDoubleLE::focusOutEvent(QFocusEvent *event)
 //{
 //    if(text().isEmpty())
