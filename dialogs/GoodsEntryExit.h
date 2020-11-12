@@ -39,6 +39,7 @@ private:
     CustomDoubleLE *m_leRebate;
     CustomDoubleLE *m_leTax;
     CustomDoubleLE *m_leMargin;
+    CustomDoubleLE *m_leDiscountPct;
     CustomDoubleLE *m_leDiscount;
     CustomDoubleLE *m_leSalePrice;
     CustomDoubleLE *m_lePriceDiff;
@@ -49,7 +50,7 @@ private:
 
     QDateEdit *m_deDate;
 
-    QComboBox *m_cbDocName;
+    QComboBox *m_cbDocType;
 
     CustomTableView *m_table;
     QSqlQueryModel *m_model;

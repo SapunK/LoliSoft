@@ -20,6 +20,7 @@ static const char* CREATE_MODELS_QUERY = "CREATE TABLE public.models"
                                          "model varchar(50) NOT NULL UNIQUE, "
                                          "PRIMARY KEY (id));";
 
+//TODO add discount pct, price after rebate, margin
 static const char* CREATE_ITEMS_QUERY = "CREATE TABLE public.items"
                                         "(id serial NOT NULL, "
                                         "doc_id numeric NOT NULL, "

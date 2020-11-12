@@ -21,7 +21,7 @@
 namespace GoodsEntryExit_NS {
 static const char* NEW_DOC = "New document";
 static const char* SAVE_DOC = "Save document";
-static const char* DOC_NAME = "Document name";
+static const char* DOC_TYPE = "Document type";
 static const char* DOC_NUMBER = "Document nm";
 static const char* NEW_ITEM = "New item";
 static const char* EDIT_ITEM = "Edit item";
@@ -32,6 +32,7 @@ static const char* MARGIN_PCT = "Margin %";
 static const char* SHOE = "Shoe";
 static const char* QUANTITY = "Quantity";
 static const char* AFTER_REBATE = "After rebate";
+static const char* DISCOUNT_PCT = "Discount %";
 
 static const char* Q_DOC_NAME_MODEL = "SELECT '' as doc_name, 0 as doc_type_id "
                                       "UNION "
@@ -60,7 +61,6 @@ GoodsEntryExit::GoodsEntryExit(QWidget *parent)
 {
     setFixedSize(HelperFunctions::desktopWidth() * 0.5, HelperFunctions::desktopHeight() * 0.4);
     setupForm();
-    connectWidgets();
 }
 
 void GoodsEntryExit::setupForm()
@@ -100,10 +100,13 @@ void GoodsEntryExit::setupForm()
     m_leMargin->setAccessibleName(MARGIN);
     m_leDiscount = new CustomDoubleLE(this);
     m_leDiscount->setAccessibleName(DISCOUNT);
+    m_leDiscountPct = new CustomDoubleLE(this);
+    m_leDiscountPct->setAccessibleName(DISCOUNT_PCT);
     m_leSalePrice = new CustomDoubleLE(this);
     m_leSalePrice->setAccessibleName(SALE_PRICE);
     m_lePriceDiff = new CustomDoubleLE(this);
     m_lePriceDiff->setAccessibleName(PRICE_DIFF);
+    m_lePriceDiff->setDisabled(true);
     m_leRebatePct = new CustomDoubleLE(this);
     m_leRebatePct->setAccessibleName(REBATE_PCT);
     m_leTaxPct = new CustomDoubleLE(this);
@@ -129,21 +132,21 @@ void GoodsEntryExit::setupForm()
     m_deDate->setCalendarPopup(true);
     m_deDate->setDisplayFormat(DATE_FORMAT);
 
-    m_cbDocName = new QComboBox(this);
+    m_cbDocType = new QComboBox(this);
     QSqlQueryModel *docNameModel = new QSqlQueryModel(this);
     docNameModel->setQuery(Q_DOC_NAME_MODEL);
-    m_cbDocName->setModel(docNameModel);
-    m_cbDocName->setEditable(false);
+    m_cbDocType->setModel(docNameModel);
+    m_cbDocType->setEditable(false);
 
-    connect(m_cbDocName, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
-        m_pbNewDoc->setDisabled(m_cbDocName->currentText().isEmpty());
+    connect(m_cbDocType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        m_pbNewDoc->setDisabled(m_cbDocType->currentText().isEmpty());
     });
 
     m_table = new CustomTableView(this);
     m_model = new QSqlQueryModel(this);
     m_table->setModel(m_model);
 
-    QLabel *lbDocName = new QLabel(DOC_NAME, this);
+    QLabel *lbDocType = new QLabel(DOC_TYPE, this);
     QLabel *lbDocNumber = new QLabel(DOC_NUMBER, this);
     QLabel *lbShoe = new QLabel(SHOE, this);
     QLabel *lbSize = new QLabel(SIZE, this);
@@ -156,34 +159,37 @@ void GoodsEntryExit::setupForm()
     QLabel *lbMargin = new QLabel(MARGIN, this);
     QLabel *lbMarginPct = new QLabel(MARGIN_PCT, this);
     QLabel *lbDiscount = new QLabel(DISCOUNT, this);
+    QLabel *lbDiscountPct = new QLabel(DISCOUNT_PCT, this);
     QLabel *lbSalePrice = new QLabel(SALE_PRICE, this);
     QLabel *lbPriceDiff = new QLabel(PRICE_DIFF, this);
     QLabel *lbDate = new QLabel(DATE, this);
     QLabel *lbAfterRebate = new QLabel(AFTER_REBATE, this);
 
-    m_vItemWidgets<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<
+    m_vItemWidgets<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
                     m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
-                    m_leDiscount<<m_lePriceDiff<<m_leSalePrice<<m_lePrcAfterRebate;
+                    m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice;
 
-    for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
-    {
-        connect(static_cast<QLineEdit*>(m_vItemWidgets.at(i)), &QLineEdit::editingFinished, this, &GoodsEntryExit::updateFields);
-    }
+    connectWidgets();
 
-    //We don't need these for the connect above
-    m_vItemWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity;
-    HelperFunctions::setTabOrder(this, m_vItemWidgets);
+    QVector<QWidget*> vTabOrderWidgets;
+    vTabOrderWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity<<
+               m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
+               m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
+               m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice;
 
-    m_vItemWidgets<<lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
+    HelperFunctions::setTabOrder(this, vTabOrderWidgets);
+
+    m_vItemWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity<<
+                    lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
                     lbDiscount<<lbSalePrice<<lbPriceDiff<<lbMarginPct<<
-                    lbMargin<<lbSize<<lbQuantity<<lbAfterRebate<<lbShoe;
+                    lbMargin<<lbSize<<lbQuantity<<lbAfterRebate<<lbShoe<<lbDiscountPct;
 
     showHideItemWidgets(true);
 
     int lColumns = -1;
 
-    mainLayout->addWidget(lbDocName,        0, ++lColumns);
-    mainLayout->addWidget(m_cbDocName,      0, ++lColumns);
+    mainLayout->addWidget(lbDocType,        0, ++lColumns);
+    mainLayout->addWidget(m_cbDocType,      0, ++lColumns);
 
     mainLayout->addWidget(lbDate,           0, ++lColumns);
     mainLayout->addWidget(m_deDate,         0, ++lColumns);
@@ -238,18 +244,22 @@ void GoodsEntryExit::setupForm()
 
     lColumns = -1;
 
-    mainLayout->addWidget(lbDiscount,       5, ++lColumns);
-    mainLayout->addWidget(m_leDiscount,     5, ++lColumns);
+    mainLayout->addWidget(lbDiscount,          5, ++lColumns);
+    mainLayout->addWidget(m_leDiscount,        5, ++lColumns);
 
-    mainLayout->addWidget(lbPriceDiff,      5, ++lColumns);
-    mainLayout->addWidget(m_lePriceDiff,    5, ++lColumns);
+    mainLayout->addWidget(lbDiscountPct,       5, ++lColumns);
+    mainLayout->addWidget(m_leDiscountPct,     5, ++lColumns);
 
-    mainLayout->addWidget(lbSalePrice,      5, ++lColumns);
-    mainLayout->addWidget(m_leSalePrice,    5, ++lColumns);
-    mainLayout->addWidget(m_pbSaveItem,     5, 7);
+    mainLayout->addWidget(lbPriceDiff,         5, ++lColumns);
+    mainLayout->addWidget(m_lePriceDiff,       5, ++lColumns);
 
-    mainLayout->addWidget(m_pbSaveDoc,      6, 7);
-    mainLayout->addWidget(m_table,    7, 0, 1, 7);
+    mainLayout->addWidget(lbSalePrice,         5, ++lColumns);
+    mainLayout->addWidget(m_leSalePrice,       5, ++lColumns);
+
+    mainLayout->addWidget(m_pbSaveItem,     6, 7);
+
+    mainLayout->addWidget(m_pbSaveDoc,      7, 7);
+    mainLayout->addWidget(m_table,    8, 0, 1, 7);
 }
 
 void GoodsEntryExit::showHideItemWidgets(bool hide)
@@ -268,6 +278,11 @@ void GoodsEntryExit::connectWidgets()
        showHideItemWidgets(false);
        m_leShoe->setFocus();
     });
+
+    for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
+    {
+        connect(static_cast<QLineEdit*>(m_vItemWidgets.at(i)), &QLineEdit::editingFinished, this, &GoodsEntryExit::updateFields);
+    }
 }
 
 bool GoodsEntryExit::validateItem()
@@ -299,17 +314,57 @@ void GoodsEntryExit::clearItemFields()
 void GoodsEntryExit::updateFields()
 {
     double entryPrice = m_leEntryPrice->value();
+    double rebatePct = m_leRebatePct->value();
+    double rebate = m_leRebate->value();
+    double taxPct = m_leTaxPct->value() / 100;
 
-    if(sender() == m_leRebate)
-    {
-//        double rebatePct =
+    if(sender() == m_leRebate){
+        rebatePct = (rebate / entryPrice) * 100;
+    } else {
+        rebate = (rebatePct / 100) * entryPrice;
     }
 
-    if(sender() == m_leRebatePct)
-    {
-        double rebate = (m_leRebatePct->value() / 100) * entryPrice;
-        m_leRebate->setValue(rebate);
+    double prcAfterRebate = taxPct != 0 ? (entryPrice - rebate)  + (entryPrice - rebate) * taxPct
+                                        : entryPrice - rebate;
+    double tax = prcAfterRebate * (m_leTaxPct->value() / 100);
+
+    double marginPct = m_leMarginPct->value();
+    double margin = m_leMargin->value();
+
+    if(sender() == m_leMargin){
+        marginPct = (margin / prcAfterRebate) * 100;
+    } else {
+        margin = (marginPct / 100) * prcAfterRebate;
     }
+
+    double salePrice = prcAfterRebate + margin;
+
+    double discount = m_leDiscount->value();
+    double discountPct = m_leDiscountPct->value();
+
+    if(sender() == m_leDiscount){
+        discountPct = (discount / salePrice) * 100;
+    } else {
+        discount = (discountPct / 100) * salePrice;
+    }
+
+    salePrice = salePrice - discount;
+
+    if(taxPct > 0)
+        salePrice = salePrice + salePrice * taxPct;
+
+    double priceDifference = salePrice - prcAfterRebate;
+
+    m_leRebate->setValue(rebate);
+    m_leRebatePct->setValue(rebatePct);
+    m_lePrcAfterRebate->setValue(prcAfterRebate);
+    m_leTax->setValue(tax);
+    m_leMargin->setValue(margin);
+    m_leMarginPct->setValue(marginPct);
+    m_leDiscount->setValue(discount);
+    m_leDiscountPct->setValue(discountPct);
+    m_lePriceDiff->setValue(priceDifference);
+    m_leSalePrice->setValue(salePrice);
 
 }
 
@@ -322,7 +377,7 @@ void GoodsEntryExit::setDocNumber()
         m_leDocNumber->setText(q.value(0).toString());
         m_docId = q.value(0).toInt();
         if(!q.exec(Q_INSERT_NEW_DOC
-                  .arg(m_cbDocName->model()->index(m_cbDocName->currentIndex(), 1).data().toInt())
+                  .arg(m_cbDocType->model()->index(m_cbDocType->currentIndex(), 1).data().toInt())
                   .arg(m_docId)
                   .arg(QDateTime::currentDateTime().toString(Qt::ISODate))))
         {
@@ -342,6 +397,7 @@ void GoodsEntryExit::insertItem()
         return;
 
     QSqlQuery q;
+    //FIXME shoeId value is wrong
     int shoeId = m_leShoe->completer()->model()->index(m_leShoe->completer()->currentRow(), 1).data().toInt();
     int size = m_leSize->value();
     int quantity = m_leQuantity->value();
@@ -362,5 +418,8 @@ void GoodsEntryExit::insertItem()
     {
        clearItemFields();
        m_model->setQuery(Q_MODEL_SELECT.arg(m_docId));
+       showHideItemWidgets(true);
+       //TODO test this focus
+       m_leShoe->setFocus();
     }
 }
