@@ -17,7 +17,12 @@ CustomIntLE::CustomIntLE(QWidget *parent, int bottom, int top)
 
 int CustomIntLE::value()
 {
-   return text().toInt();
+    return text().toInt();
+}
+
+void CustomIntLE::setValue(int value)
+{
+    setText(QString::number(value));
 }
 
 //void CustomIntLE::focusOutEvent(QFocusEvent *event)

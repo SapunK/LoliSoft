@@ -12,6 +12,24 @@ class QSqlQueryModel;
 class CustomDoubleLE;
 class CustomIntLE;
 
+enum EEditItem{
+    shoe,
+    size,
+    quantity,
+    entryPrice,
+    rebate,
+    rebatePct,
+    priceAfterRebate,
+    tax,
+    taxPct,
+    margin,
+    marginPct,
+    discount,
+    discountPct,
+    priceDiff,
+    salePrice
+};
+
 class GoodsEntryExit : public QDialog
 {
     Q_OBJECT
@@ -21,6 +39,7 @@ public:
 private:
     
     int m_docId;
+    int m_itemId;
 
     QPushButton *m_pbNewDoc;
     QPushButton *m_pbSaveDoc;
@@ -47,6 +66,7 @@ private:
     CustomDoubleLE *m_lePrcAfterRebate;
     CustomDoubleLE *m_leTaxPct;
     CustomDoubleLE *m_leMarginPct;
+    CustomDoubleLE *m_leSumValue;
 
     QDateEdit *m_deDate;
 
@@ -66,7 +86,8 @@ private:
 
 private slots:
     void setDocNumber();
-    void insertItem();
+    void insertUpdateItem();
+    void editItem();
 };
 
 #endif // GOODSENTRYEXIT_H

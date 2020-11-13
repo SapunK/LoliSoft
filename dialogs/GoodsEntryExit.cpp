@@ -33,22 +33,37 @@ static const char* SHOE = "Shoe";
 static const char* QUANTITY = "Quantity";
 static const char* AFTER_REBATE = "After rebate";
 static const char* DISCOUNT_PCT = "Discount %";
+static const char* SUM_VALUE = "Sum value";
 
 static const char* Q_DOC_NAME_MODEL = "SELECT '' as doc_name, 0 as doc_type_id "
                                       "UNION "
                                       "SELECT doc_name, id as doc_type_id FROM doc_types "
                                       "ORDER BY doc_name;";
 //TODO probably max doc number from certain doc type
-static const char* Q_LAST_DOC_NUM = "SELECT COALESCE(MAX(doc_number), 1) + 1 FROM documents;";
-static const char* Q_SHOE_COMPLETER = "SELECT m.model || ' ' || c.color || ' ' || s.code "
+static const char* Q_LAST_DOC_NUM = "SELECT COALESCE(MAX(doc_number), 0) + 1 FROM documents;";
+static const char* Q_SHOE_COMPLETER = "SELECT m.model || ' ' || c.color || ' ' || s.code, s.code "
                                       "FROM shoes s "
                                       "INNER JOIN models m ON s.model = m.id "
                                       "INNER JOIN colors c ON s.color = c.id "
                                       "GROUP BY m.model, s.code, c.color;";
 static const QString Q_INSERT_NEW_DOC = "INSERT INTO documents (doc_type_id, doc_number, datetime) VALUES (%1, %2, '%3') RETURNING id;";
-static const QString Q_INSERT_ITEM = "INSERT INTO items (doc_id, shoe_id, size, entry_price, rebate, rebate_percentage, "
-                                     "tax, tax_percentage, sale_price, discount, price_difference, quantity, datetime, updated) "
-                                     "VALUES (%1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, '%13', '%14');";
+static const QString Q_INSERT_ITEM = "INSERT INTO items (doc_id, shoe_id, size, quantity, entry_price, rebate, rebate_percentage, "
+                                     "price_after_rebate, tax, tax_percentage, margin, margin_percentage, discount, "
+                                     "discount_percentage, price_difference, sale_price, sum_value, datetime, updated) "
+                                     "VALUES (%1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, '%18', '%19');";
+static const QString Q_SELECT_ITEM = "SELECT m.model || ' ' || c.color || ' ' || s.code, i.size, i.quantity, i.entry_price, i.rebate, "
+                                     "i.rebate_percentage, i.price_after_rebate, i.tax, i.tax_percentage, i.margin, i.margin_percentage, "
+                                     "i.discount, i.discount_percentage, i.price_difference, i.sale_price "
+                                     "FROM items i "
+                                     "INNER JOIN shoes s on s.code = i.shoe_id "
+                                     "INNER JOIN models m ON s.model = m.id "
+                                     "INNER JOIN colors c ON s.color = c.id "
+                                     "WHERE i.id = %1";
+static const QString Q_UPDATE_ITEM = "UPDATE items SET shoe_id = %1, size = %2, quantity = %3, entry_price = %4, rebate = %5, "
+                                     "rebate_percentage = %6, price_after_rebate = %7, tax = %8, tax_percentage = %9, margin = %10, "
+                                     "margin_percentage = %11, discount = %12, discount_percentage = %13, price_difference = %14, "
+                                     "sale_price = %15, sum_value = %16, updated = %17 "
+                                     "WHERE id = %18";
 //TODO select only relevant columns
 static const QString Q_MODEL_SELECT = "SELECT * FROM items WHERE doc_id = %1";
 
@@ -57,7 +72,8 @@ static const QString Q_MODEL_SELECT = "SELECT * FROM items WHERE doc_id = %1";
 using namespace GoodsEntryExit_NS;
 
 GoodsEntryExit::GoodsEntryExit(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      m_itemId(-1)
 {
     setFixedSize(HelperFunctions::desktopWidth() * 0.5, HelperFunctions::desktopHeight() * 0.4);
     setupForm();
@@ -78,11 +94,13 @@ void GoodsEntryExit::setupForm()
     m_pbDeleteItem->setDisabled(true);
     m_pbSaveItem = new QPushButton(SAVE_ITEM, this);
 
-    m_leShoe = new QLineEdit(this);
-    m_leShoe->setAccessibleName(SHOE);
     m_leDocNumber = new QLineEdit(this);
     m_leDocNumber->setDisabled(true);
+    m_leSumValue = new CustomDoubleLE(this);
+    m_leSumValue->setDisabled(true);
 
+    m_leShoe = new QLineEdit(this);
+    m_leShoe->setAccessibleName(SHOE);
     m_leSize = new CustomIntLE(this);
     m_leSize->setAccessibleName(SIZE);
     m_leQuantity = new CustomIntLE(this);
@@ -116,14 +134,9 @@ void GoodsEntryExit::setupForm()
     m_lePrcAfterRebate = new CustomDoubleLE(this);
     m_lePrcAfterRebate->setAccessibleName(AFTER_REBATE);
 
-    QStringList completerList;
-    QSqlQuery qCompleter;
-    qCompleter.exec(Q_SHOE_COMPLETER);
-    while(qCompleter.next())
-    {
-        completerList.append(qCompleter.value(0).toString());
-    }
-    QCompleter *shoeCompleter = new QCompleter(completerList, this);
+    QSqlQueryModel *completerModel = new QSqlQueryModel(this);
+    completerModel->setQuery(Q_SHOE_COMPLETER);
+    QCompleter *shoeCompleter = new QCompleter(completerModel, this);
     shoeCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     shoeCompleter->setFilterMode(Qt::MatchContains);
     m_leShoe->setCompleter(shoeCompleter);
@@ -164,25 +177,28 @@ void GoodsEntryExit::setupForm()
     QLabel *lbPriceDiff = new QLabel(PRICE_DIFF, this);
     QLabel *lbDate = new QLabel(DATE, this);
     QLabel *lbAfterRebate = new QLabel(AFTER_REBATE, this);
+    QLabel *lbSumValue = new QLabel(SUM_VALUE, this);
 
+    //We first add line edits to the vector so we can connect them to a slot in connectWidgets()
     m_vItemWidgets<<m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
                     m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
                     m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice;
 
     connectWidgets();
 
-    QVector<QWidget*> vTabOrderWidgets;
-    vTabOrderWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity<<
-               m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
-               m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
-               m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice;
-
-    HelperFunctions::setTabOrder(this, vTabOrderWidgets);
-
+    //Then we add the other widgets to the vector for show/hide method
     m_vItemWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity<<
                     lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
                     lbDiscount<<lbSalePrice<<lbPriceDiff<<lbMarginPct<<
                     lbMargin<<lbSize<<lbQuantity<<lbAfterRebate<<lbShoe<<lbDiscountPct;
+
+    QVector<QWidget*> vTabOrderWidgets;
+    vTabOrderWidgets<<m_leShoe<<m_leSize<<m_leQuantity<<
+                      m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
+                      m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
+                      m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice<<m_pbSaveItem;
+
+    HelperFunctions::setTabOrder(this, vTabOrderWidgets);
 
     showHideItemWidgets(true);
 
@@ -204,6 +220,8 @@ void GoodsEntryExit::setupForm()
     mainLayout->addWidget(m_pbNewItem,      1, ++lColumns);
     mainLayout->addWidget(m_pbEditItem,     1, ++lColumns);
     mainLayout->addWidget(m_pbDeleteItem,   1, ++lColumns);
+    mainLayout->addWidget(lbSumValue,       1, 5);
+    mainLayout->addWidget(m_leSumValue,     1, 6);
 
     lColumns = -1;
 
@@ -273,11 +291,18 @@ void GoodsEntryExit::showHideItemWidgets(bool hide)
 void GoodsEntryExit::connectWidgets()
 {
     connect(m_pbNewDoc, &QPushButton::clicked, this, &GoodsEntryExit::setDocNumber);
-    connect(m_pbSaveItem, &QPushButton::clicked, this, &GoodsEntryExit::insertItem);
+    connect(m_pbSaveItem, &QPushButton::clicked, this, &GoodsEntryExit::insertUpdateItem);
     connect(m_pbNewItem, &QPushButton::clicked, this, [this]{
        showHideItemWidgets(false);
        m_leShoe->setFocus();
     });
+    connect(m_pbEditItem, &QPushButton::clicked, this, &GoodsEntryExit::editItem);
+    connect(m_table->selectionModel(), &QItemSelectionModel::currentRowChanged, this, [this]{
+        //TODO if index is valid
+        m_pbEditItem->setEnabled(true);
+        m_pbDeleteItem->setEnabled(true);
+    });
+
 
     for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
     {
@@ -391,35 +416,74 @@ void GoodsEntryExit::setDocNumber()
     }
 }
 
-void GoodsEntryExit::insertItem()
+void GoodsEntryExit::insertUpdateItem()
 {
     if(!validateItem())
         return;
 
     QSqlQuery q;
-    //FIXME shoeId value is wrong
-    int shoeId = m_leShoe->completer()->model()->index(m_leShoe->completer()->currentRow(), 1).data().toInt();
+    //FIXME completer index is always at 0 when an item is selected.
+    int shoeId = m_leShoe->completer()->model()->index(m_leShoe->completer()->currentIndex().row(), 1).data().toInt();
     int size = m_leSize->value();
     int quantity = m_leQuantity->value();
     double entryPrice = m_leEntryPrice->value();
     double rebate = m_leRebate->value();
     double rebatePct = m_leRebatePct->value();
+    double priceAfterRebate = m_lePrcAfterRebate->value();
     double tax = m_leTax->value();
     double taxPct = m_leTaxPct->value();
-    double salePrice = m_leSalePrice->value();
+    double margin = m_leMargin->value();
+    double marginPct = m_leMarginPct->value();
     double discount = m_leDiscount->value();
+    double discountPct = m_leDiscountPct->value();
     double priceDiff = m_lePriceDiff->value();
+    double salePrice = m_leSalePrice->value();
+    double sumValue = salePrice * quantity;
     QString currentDateTime = QDateTime::currentDateTime().toString(Qt::ISODate);
 
-    q.prepare(Q_INSERT_ITEM.arg(m_docId).arg(shoeId).arg(size).arg(entryPrice).arg(rebate)
-              .arg(rebatePct).arg(tax).arg(taxPct).arg(salePrice).arg(discount).arg(priceDiff)
-              .arg(quantity).arg(currentDateTime).arg(currentDateTime));
+    if(m_itemId == -1){
+        q.prepare(Q_INSERT_ITEM.arg(m_docId).arg(shoeId).arg(size).arg(quantity).arg(entryPrice).arg(rebate)
+                  .arg(rebatePct).arg(priceAfterRebate).arg(tax).arg(taxPct).arg(margin).arg(marginPct).arg(discount)
+                  .arg(discountPct).arg(priceDiff).arg(salePrice).arg(sumValue).arg(currentDateTime).arg(currentDateTime));
+    } else {
+        q.prepare(Q_UPDATE_ITEM.arg(shoeId).arg(size).arg(quantity).arg(entryPrice).arg(rebate)
+                  .arg(rebatePct).arg(priceAfterRebate).arg(tax).arg(taxPct).arg(margin).arg(marginPct).arg(discount)
+                  .arg(discountPct).arg(priceDiff).arg(salePrice).arg(sumValue).arg(currentDateTime).arg(m_itemId));
+    }
+
     if(q.exec())
     {
-       clearItemFields();
-       m_model->setQuery(Q_MODEL_SELECT.arg(m_docId));
-       showHideItemWidgets(true);
-       //TODO test this focus
-       m_leShoe->setFocus();
+        m_itemId = -1;
+        m_leSumValue->setValue(m_leSumValue->value() + sumValue);
+        clearItemFields();
+        m_model->setQuery(Q_MODEL_SELECT.arg(m_docId));
+        showHideItemWidgets(true);
+        m_pbNewItem->setFocus();
     }
+}
+
+void GoodsEntryExit::editItem()
+{
+    m_itemId = m_model->index(m_table->currentIndex().row(), 0).data().toInt();
+    QSqlQuery q;
+    if(q.exec(Q_SELECT_ITEM.arg(m_itemId)) && q.next())
+    {
+        m_leShoe->setText(q.value(EEditItem::shoe).toString());
+        m_leSize->setValue(q.value(EEditItem::size).toInt());
+        m_leQuantity->setValue(q.value(EEditItem::quantity).toInt());
+        m_leEntryPrice->setValue(q.value(EEditItem::entryPrice).toDouble());
+        m_leRebate->setValue(q.value(EEditItem::rebate).toDouble());
+        m_leRebatePct->setValue(q.value(EEditItem::rebatePct).toDouble());
+        m_lePrcAfterRebate->setValue(q.value(EEditItem::priceAfterRebate).toDouble());
+        m_leTax->setValue(q.value(EEditItem::tax).toDouble());
+        m_leTaxPct->setValue(q.value(EEditItem::taxPct).toDouble());
+        m_leMargin->setValue(q.value(EEditItem::margin).toDouble());
+        m_leMarginPct->setValue(q.value(EEditItem::marginPct).toDouble());
+        m_leDiscount->setValue(q.value(EEditItem::discount).toDouble());
+        m_leDiscountPct->setValue(q.value(EEditItem::discountPct).toDouble());
+        m_lePriceDiff->setValue(q.value(EEditItem::priceDiff).toDouble());
+        m_leSalePrice->setValue(q.value(EEditItem::salePrice).toDouble());
+        showHideItemWidgets(false);
+    }
+
 }
