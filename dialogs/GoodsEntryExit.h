@@ -48,7 +48,6 @@ private:
     QPushButton *m_pbDeleteItem;
     QPushButton *m_pbSaveItem;
 
-    QLineEdit *m_leShoe;
     QLineEdit *m_leDocNumber;
 
     CustomIntLE *m_leSize;
@@ -66,10 +65,11 @@ private:
     CustomDoubleLE *m_lePrcAfterRebate;
     CustomDoubleLE *m_leTaxPct;
     CustomDoubleLE *m_leMarginPct;
-    CustomDoubleLE *m_leSumValue;
+    CustomDoubleLE *m_leDocValue;
 
     QDateEdit *m_deDate;
 
+    QComboBox *m_cbShoe;
     QComboBox *m_cbDocType;
 
     CustomTableView *m_table;
@@ -84,10 +84,13 @@ private:
     void clearItemFields();
     void updateFields();
 
+    bool event(QEvent *event);
 private slots:
     void setDocNumber();
     void insertUpdateItem();
     void editItem();
+    void deleteItem();
 };
+
 
 #endif // GOODSENTRYEXIT_H

@@ -11,6 +11,9 @@
 #include <QCompleter>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSortFilterProxyModel>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include "appconsts.h"
 #include "HelperFunctions.h"
@@ -34,6 +37,7 @@ static const char* QUANTITY = "Quantity";
 static const char* AFTER_REBATE = "After rebate";
 static const char* DISCOUNT_PCT = "Discount %";
 static const char* SUM_VALUE = "Sum value";
+static const char* MSG_DELETE_QUESTION = "Are you sure you want to delete this item?";
 
 static const char* Q_DOC_NAME_MODEL = "SELECT '' as doc_name, 0 as doc_type_id "
                                       "UNION "
@@ -62,8 +66,9 @@ static const QString Q_SELECT_ITEM = "SELECT m.model || ' ' || c.color || ' ' ||
 static const QString Q_UPDATE_ITEM = "UPDATE items SET shoe_id = %1, size = %2, quantity = %3, entry_price = %4, rebate = %5, "
                                      "rebate_percentage = %6, price_after_rebate = %7, tax = %8, tax_percentage = %9, margin = %10, "
                                      "margin_percentage = %11, discount = %12, discount_percentage = %13, price_difference = %14, "
-                                     "sale_price = %15, sum_value = %16, updated = %17 "
+                                     "sale_price = %15, sum_value = %16, updated = '%17' "
                                      "WHERE id = %18";
+static const QString Q_DELETE_ITEM = "DELETE FROM items WHERE id = %1";
 //TODO select only relevant columns
 static const QString Q_MODEL_SELECT = "SELECT * FROM items WHERE doc_id = %1";
 
@@ -96,11 +101,11 @@ void GoodsEntryExit::setupForm()
 
     m_leDocNumber = new QLineEdit(this);
     m_leDocNumber->setDisabled(true);
-    m_leSumValue = new CustomDoubleLE(this);
-    m_leSumValue->setDisabled(true);
+    m_leDocValue = new CustomDoubleLE(this);
+    m_leDocValue->setDisabled(true);
 
-    m_leShoe = new QLineEdit(this);
-    m_leShoe->setAccessibleName(SHOE);
+    m_cbShoe = new QComboBox(this);
+    m_cbShoe->setAccessibleName(SHOE);
     m_leSize = new CustomIntLE(this);
     m_leSize->setAccessibleName(SIZE);
     m_leQuantity = new CustomIntLE(this);
@@ -135,11 +140,24 @@ void GoodsEntryExit::setupForm()
     m_lePrcAfterRebate->setAccessibleName(AFTER_REBATE);
 
     QSqlQueryModel *completerModel = new QSqlQueryModel(this);
+    QSortFilterProxyModel *sortModel = new QSortFilterProxyModel(this);
     completerModel->setQuery(Q_SHOE_COMPLETER);
-    QCompleter *shoeCompleter = new QCompleter(completerModel, this);
-    shoeCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-    shoeCompleter->setFilterMode(Qt::MatchContains);
-    m_leShoe->setCompleter(shoeCompleter);
+    sortModel->setSourceModel(completerModel);
+    m_cbShoe->setEditable(true);
+    m_cbShoe->setModel(sortModel);
+    m_cbShoe->setModelColumn(0);
+    m_cbShoe->completer()->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    m_cbShoe->completer()->setCaseSensitivity(Qt::CaseInsensitive);
+    m_cbShoe->completer()->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    m_cbShoe->setCurrentIndex(-1);
+
+    connect(m_cbShoe->lineEdit(), &QLineEdit::textEdited, this, [this, sortModel](QString text){
+        if(text.isEmpty()){
+            m_cbShoe->setCurrentIndex(-1);
+            return;
+        }
+        sortModel->setFilterWildcard("*" + text + "*");
+    });
 
     m_deDate = new QDateEdit(QDate::currentDate(), this);
     m_deDate->setCalendarPopup(true);
@@ -187,13 +205,13 @@ void GoodsEntryExit::setupForm()
     connectWidgets();
 
     //Then we add the other widgets to the vector for show/hide method
-    m_vItemWidgets<<m_pbSaveItem<<m_leShoe<<m_leSize<<m_leQuantity<<
+    m_vItemWidgets<<m_pbSaveItem<<m_cbShoe<<m_leSize<<m_leQuantity<<
                     lbEntryPrice<<lbRebate<<lbRebatePct<<lbTax<<lbTaxPct<<
                     lbDiscount<<lbSalePrice<<lbPriceDiff<<lbMarginPct<<
                     lbMargin<<lbSize<<lbQuantity<<lbAfterRebate<<lbShoe<<lbDiscountPct;
 
     QVector<QWidget*> vTabOrderWidgets;
-    vTabOrderWidgets<<m_leShoe<<m_leSize<<m_leQuantity<<
+    vTabOrderWidgets<<m_cbShoe<<m_leSize<<m_leQuantity<<
                       m_leEntryPrice<<m_leRebate<<m_leRebatePct<<m_lePrcAfterRebate<<
                       m_leTax<<m_leTaxPct<<m_leMargin<<m_leMarginPct<<
                       m_leDiscount<<m_leDiscountPct<<m_lePriceDiff<<m_leSalePrice<<m_pbSaveItem;
@@ -221,12 +239,12 @@ void GoodsEntryExit::setupForm()
     mainLayout->addWidget(m_pbEditItem,     1, ++lColumns);
     mainLayout->addWidget(m_pbDeleteItem,   1, ++lColumns);
     mainLayout->addWidget(lbSumValue,       1, 5);
-    mainLayout->addWidget(m_leSumValue,     1, 6);
+    mainLayout->addWidget(m_leDocValue,     1, 6);
 
     lColumns = -1;
 
     mainLayout->addWidget(lbShoe,           2, 0);
-    mainLayout->addWidget(m_leShoe,         2, 1, 1, 3);
+    mainLayout->addWidget(m_cbShoe,         2, 1, 1, 3);
 
     mainLayout->addWidget(lbSize,           2, 4);
     mainLayout->addWidget(m_leSize,         2, 5);
@@ -286,6 +304,9 @@ void GoodsEntryExit::showHideItemWidgets(bool hide)
     {
         m_vItemWidgets.at(i)->setHidden(hide);
     }
+
+    if(hide)
+        m_cbShoe->setCurrentIndex(-1);
 }
 
 void GoodsEntryExit::connectWidgets()
@@ -294,13 +315,15 @@ void GoodsEntryExit::connectWidgets()
     connect(m_pbSaveItem, &QPushButton::clicked, this, &GoodsEntryExit::insertUpdateItem);
     connect(m_pbNewItem, &QPushButton::clicked, this, [this]{
        showHideItemWidgets(false);
-       m_leShoe->setFocus();
+       m_cbShoe->setFocus();
     });
     connect(m_pbEditItem, &QPushButton::clicked, this, &GoodsEntryExit::editItem);
+    connect(m_pbDeleteItem, &QPushButton::clicked, this, &GoodsEntryExit::deleteItem);
     connect(m_table->selectionModel(), &QItemSelectionModel::currentRowChanged, this, [this]{
-        //TODO if index is valid
-        m_pbEditItem->setEnabled(true);
-        m_pbDeleteItem->setEnabled(true);
+        if(m_table->currentIndex().isValid()){
+            m_pbEditItem->setEnabled(true);
+            m_pbDeleteItem->setEnabled(true);
+        }
     });
 
 
@@ -412,6 +435,8 @@ void GoodsEntryExit::setDocNumber()
             return;
         }
         m_pbNewItem->setEnabled(true);
+        m_pbNewDoc->setDisabled(true);
+        m_cbDocType->setDisabled(true);
 
     }
 }
@@ -422,8 +447,7 @@ void GoodsEntryExit::insertUpdateItem()
         return;
 
     QSqlQuery q;
-    //FIXME completer index is always at 0 when an item is selected.
-    int shoeId = m_leShoe->completer()->model()->index(m_leShoe->completer()->currentIndex().row(), 1).data().toInt();
+    int shoeId = m_cbShoe->model()->index(m_cbShoe->currentIndex(), 1).data().toInt();
     int size = m_leSize->value();
     int quantity = m_leQuantity->value();
     double entryPrice = m_leEntryPrice->value();
@@ -454,11 +478,21 @@ void GoodsEntryExit::insertUpdateItem()
     if(q.exec())
     {
         m_itemId = -1;
-        m_leSumValue->setValue(m_leSumValue->value() + sumValue);
+        m_cbShoe->setCurrentIndex(-1);
+        static_cast<QSortFilterProxyModel*>(m_cbShoe->model())->setFilterWildcard("*");
         clearItemFields();
         m_model->setQuery(Q_MODEL_SELECT.arg(m_docId));
+        double docSumValue = 0;
+        for(int i = 0 ; i < m_model->rowCount() ; i++)
+        {
+            //TODO change 17 to enum
+            docSumValue += m_model->index(i, 17).data().toDouble();
+        }
+        m_leDocValue->setValue(docSumValue);
         showHideItemWidgets(true);
         m_pbNewItem->setFocus();
+    } else {
+        qWarning()<<"query error: "<<q.lastError()<<"\nlast query: "<<q.lastQuery();
     }
 }
 
@@ -468,7 +502,7 @@ void GoodsEntryExit::editItem()
     QSqlQuery q;
     if(q.exec(Q_SELECT_ITEM.arg(m_itemId)) && q.next())
     {
-        m_leShoe->setText(q.value(EEditItem::shoe).toString());
+        m_cbShoe->setCurrentIndex(m_cbShoe->findText(q.value(EEditItem::shoe).toString()));
         m_leSize->setValue(q.value(EEditItem::size).toInt());
         m_leQuantity->setValue(q.value(EEditItem::quantity).toInt());
         m_leEntryPrice->setValue(q.value(EEditItem::entryPrice).toDouble());
@@ -486,4 +520,35 @@ void GoodsEntryExit::editItem()
         showHideItemWidgets(false);
     }
 
+}
+
+void GoodsEntryExit::deleteItem()
+{
+    if(QMessageBox::Yes == QMessageBox::question(this, DELETE_ITEM, MSG_DELETE_QUESTION))
+    {
+        //TODO use enum for column
+        int itemId = m_model->index(m_table->currentIndex().row(), 0).data().toInt();
+        QSqlQuery q;
+        if(q.exec(Q_DELETE_ITEM.arg(itemId)))
+        {
+            m_model->setQuery(m_model->query().lastQuery());
+        } else {
+            qCritical()<<"Last query: "<<q.lastQuery()<<"\nLast error: "<<q.lastError();
+        }
+    }
+}
+
+bool GoodsEntryExit::event(QEvent *event){
+    if(event->type() == QEvent::KeyPress){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if(keyEvent->key() == Qt::Key_Escape){
+            if(!m_cbShoe->isHidden()){
+                clearItemFields();
+                showHideItemWidgets(true);
+                return true;
+            }
+            //TODO else ask if the user is sure that he wants to close the dialog
+        }
+    }
+    return QWidget::event(event);
 }
