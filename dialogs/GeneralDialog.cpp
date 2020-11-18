@@ -12,8 +12,9 @@
 #include "appconsts.h"
 #include "custom_widgets/CustomTableView.h"
 
-GeneralDialog::GeneralDialog(QWidget *parent)
-    : QDialog(parent)
+GeneralDialog::GeneralDialog(QWidget *parent, bool hideEditNew)
+    : QDialog(parent),
+      m_bHideEditNew(hideEditNew)
 {
     setupForm();
 
@@ -40,6 +41,7 @@ void GeneralDialog::setupForm()
     m_leSearch->setFocus();
 
     m_leNew = new QLineEdit(this);
+    m_leNew->setHidden(m_bHideEditNew);
 
     m_pbNew = new QPushButton(NEW, this);
     m_pbNew->setFocusPolicy(Qt::NoFocus);
@@ -55,6 +57,8 @@ void GeneralDialog::setupForm()
     QVBoxLayout *vLeftSide = new QVBoxLayout;
     QVBoxLayout *vRightSide = new QVBoxLayout;
 
+    m_grLayout = new QGridLayout;
+
     vLeftSide->addWidget(m_leNew);
     vLeftSide->addWidget(m_pbNew);
     vLeftSide->addWidget(m_pbClose);
@@ -65,6 +69,7 @@ void GeneralDialog::setupForm()
     vRightSide->addWidget(m_table);
 
     mainLayout->addLayout(vLeftSide);
+    mainLayout->addLayout(m_grLayout);
     mainLayout->addLayout(vRightSide);
 
     setLayout(mainLayout);

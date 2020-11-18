@@ -437,7 +437,6 @@ void GoodsEntryExit::setDocNumber()
         m_pbNewItem->setEnabled(true);
         m_pbNewDoc->setDisabled(true);
         m_cbDocType->setDisabled(true);
-
     }
 }
 

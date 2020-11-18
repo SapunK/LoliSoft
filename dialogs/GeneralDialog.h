@@ -6,13 +6,13 @@
 class QLineEdit;
 class QSqlQueryModel;
 class CustomTableView;
-
+class QGridLayout;
 
 class GeneralDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GeneralDialog(QWidget *parent = nullptr);
+    explicit GeneralDialog(QWidget *parent = nullptr, bool lineEditNew = true);
 
 protected:
     void setupForm();
@@ -26,6 +26,10 @@ protected:
 
     CustomTableView *m_table;
     QSqlQueryModel *m_model;
+
+    QGridLayout *m_grLayout;
+
+    bool m_bHideEditNew;
 
 protected slots:
     virtual void newClicked() = 0;

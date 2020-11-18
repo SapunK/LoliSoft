@@ -18,6 +18,7 @@
 #include "ModelsBox.h"
 #include "custom_widgets/CustomTableView.h"
 #include "GoodsEntryExit.h"
+#include "ShoesBox.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
@@ -60,6 +61,7 @@ void MainWindow::setupForm()
     m_pbColors = new QPushButton(COLORS, this);
     m_pbModels = new QPushButton(MODELS, this);
     m_pbMaterials = new QPushButton(MATERIALS, this);
+    m_pbShoes = new QPushButton(SHOES, this);
     m_pbEntryExitGoods = new QPushButton(ENTRY_EXIT_GOODS, this);
 
     foreach(QPushButton* pb, findChildren<QPushButton*>()){
@@ -86,6 +88,7 @@ void MainWindow::setupForm()
     vLayoutButtons->addWidget(m_pbColors);
     vLayoutButtons->addWidget(m_pbMaterials);
     vLayoutButtons->addWidget(m_pbModels);
+    vLayoutButtons->addWidget(m_pbShoes);
     vLayoutButtons->addWidget(m_pbEntryExitGoods);
     vLayoutButtons->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 #ifdef QT_DEBUG
@@ -161,7 +164,7 @@ void MainWindow::connectWidgets()
     connect(m_leSearch, &QLineEdit::returnPressed, this, &MainWindow::slotSearch);
 
     connect(m_pbColors, &QAbstractButton::clicked, this, [this](){
-       ColorsBox *box = new ColorsBox(m_mainWidget);
+       ColorsBox *box = new ColorsBox(this);
        box->show();
     });
     connect(m_pbWarehouse, &QAbstractButton::clicked, this, [this](){
@@ -174,6 +177,10 @@ void MainWindow::connectWidgets()
     });
     connect(m_pbModels, &QAbstractButton::clicked, this, [this](){
         ModelsBox *box = new ModelsBox(this);
+        box->show();
+    });
+    connect(m_pbShoes, &QAbstractButton::clicked, this, [this](){
+        ShoesBox *box = new ShoesBox(this);
         box->show();
     });
     connect(m_pbEntryExitGoods, &QAbstractButton::clicked, this, [this]{

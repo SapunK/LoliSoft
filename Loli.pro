@@ -35,6 +35,7 @@ SOURCES += \
     dialogs/GoodsEntryExit.cpp \
     dialogs/MaterialsBox.cpp \
     dialogs/ModelsBox.cpp \
+    dialogs/ShoesBox.cpp \
     dialogs/Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     dialogs/GoodsEntryExit.h \
     dialogs/MaterialsBox.h \
     dialogs/ModelsBox.h \
+    dialogs/ShoesBox.h \
     dialogs/Warehouse.h \
         mainwindow.h \
         appconsts.h

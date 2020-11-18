@@ -39,6 +39,7 @@ extern const char* PRICE_DIFF;
 extern const char* ENTRY_EXIT_GOODS;
 extern const char* DATE;
 extern const char* DATE_FORMAT;
+extern const char* SHOES;
 
 ///DIMENSIONS
 extern const char* PB_FONTSIZE;

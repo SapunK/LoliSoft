@@ -36,6 +36,7 @@ const char* PRICE_DIFF = "Price difference";
 const char* ENTRY_EXIT_GOODS = "Entry/exit of goods";
 const char* DATE = "Date";
 const char* DATE_FORMAT = "dd.MM.yyyy";
+const char* SHOES = "Shoes";
 
 ///DIMENSIONS
 //TODO get rid of fixed px for fonts
