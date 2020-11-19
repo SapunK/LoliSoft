@@ -23,8 +23,8 @@ GeneralDialog::GeneralDialog(QWidget *parent, bool hideEditNew)
     connect(m_pbDelete, &QPushButton::clicked, this, &GeneralDialog::deleteRecord);
     connect(this, &GeneralDialog::refreshModel, this, [this]{
         m_leNew->clear();
-       m_model->setQuery(m_model->query().lastQuery());
-       m_table->resizeColumnsToContents();
+        m_model->setQuery(m_model->query().lastQuery());
+        m_table->resizeColumnsToContents();
     });
     connect(m_leSearch, &QLineEdit::returnPressed, this, &GeneralDialog::filterModel);
 }

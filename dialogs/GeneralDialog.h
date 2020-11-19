@@ -15,7 +15,6 @@ public:
     explicit GeneralDialog(QWidget *parent = nullptr, bool lineEditNew = true);
 
 protected:
-    void setupForm();
 
     QLineEdit *m_leSearch;
     QLineEdit *m_leNew;
@@ -35,6 +34,9 @@ protected slots:
     virtual void newClicked() = 0;
     virtual void deleteRecord() = 0;
     virtual void filterModel() = 0;
+
+private:
+    void setupForm();
 
 signals:
     virtual void refreshModel();

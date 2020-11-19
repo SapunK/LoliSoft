@@ -71,7 +71,6 @@ static const char* CREATE_SHOES_QUERY = "CREATE TABLE public.shoes("
                                         "color integer NOT NULL, "
                                         "model integer NOT NULL, "
                                         "material integer NOT NULL, "
-                                        "price numeric NOT NULL, "
                                         "PRIMARY KEY (id), "
                                         "CONSTRAINT color FOREIGN KEY (color) "
                                         "REFERENCES colors (id) MATCH SIMPLE "
@@ -104,11 +103,11 @@ static const char* INSERT_MODELS = "INSERT INTO models (model) VALUES ('ballet')
                                    "INSERT INTO models (model) VALUES ('espadrille');"
                                    "INSERT INTO models (model) VALUES ('derby');";
 
-static const char* INSERT_SHOES = "INSERT INTO shoes (code, color, model, material, price) VALUES (123, 1, 1, 1, 1500);"
-                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (234, 1, 2, 3, 1200);"
-                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (345, 2, 1, 2, 1300);"
-                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (456, 3, 2, 1, 1900);"
-                                  "INSERT INTO shoes (code, color, model, material, price) VALUES (567, 1, 3, 3, 2000);";
+static const char* INSERT_SHOES = "INSERT INTO shoes (code, color, model, material) VALUES (123, 1, 1, 1);"
+                                  "INSERT INTO shoes (code, color, model, material) VALUES (234, 1, 2, 3);"
+                                  "INSERT INTO shoes (code, color, model, material) VALUES (345, 2, 1, 2);"
+                                  "INSERT INTO shoes (code, color, model, material) VALUES (456, 3, 2, 1);"
+                                  "INSERT INTO shoes (code, color, model, material) VALUES (567, 1, 3, 3);";
 
 static const char* INSERT_DOC_TYPES = "INSERT INTO doc_types (doc_name, affects) VALUES ('receipt invoice', true);"
                                       "INSERT INTO doc_types (doc_name, affects) VALUES ('delivery invoice', false);"
