@@ -33,6 +33,7 @@ private:
     QPushButton *m_pbMaterials;
     QPushButton *m_pbShoes;
     QPushButton *m_pbEntryExitGoods;
+    QPushButton *m_pbViewDocuments;
 #ifdef QT_DEBUG
     QPushButton *m_pbCreateTables;
     QPushButton *m_pbFillDb;

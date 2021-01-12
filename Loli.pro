@@ -36,6 +36,7 @@ SOURCES += \
     dialogs/MaterialsBox.cpp \
     dialogs/ModelsBox.cpp \
     dialogs/ShoesBox.cpp \
+    dialogs/ViewDocuments.cpp \
     dialogs/Warehouse.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     dialogs/MaterialsBox.h \
     dialogs/ModelsBox.h \
     dialogs/ShoesBox.h \
+    dialogs/ViewDocuments.h \
     dialogs/Warehouse.h \
         mainwindow.h \
         appconsts.h

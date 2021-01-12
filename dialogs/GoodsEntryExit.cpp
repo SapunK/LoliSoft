@@ -69,8 +69,12 @@ static const QString Q_UPDATE_ITEM = "UPDATE items SET shoe_id = %1, size = %2, 
                                      "sale_price = %15, sum_value = %16, updated = '%17' "
                                      "WHERE id = %18";
 static const QString Q_DELETE_ITEM = "DELETE FROM items WHERE id = %1";
-//TODO select only relevant columns
-static const QString Q_MODEL_SELECT = "SELECT * FROM items WHERE doc_id = %1";
+static const QString Q_MODEL_SELECT = "SELECT shoe_id, size, quantity, entry_price, rebate, rebate_percentage, price_after_rebate, "
+                                      "tax, tax_percentage, margin, margin_percentage, discount, discount_percentage, price_difference, "
+                                      "sale_price, sum_value FROM items WHERE doc_id = %1";
+static const QString Q_SAVE_DOC = "UPDATE documents SET entry_price = %1, rebate = %2, rebate_percentage = %3, "
+                                  "tax = %4, tax_percentage = %5, sale_price = %6, price_difference = %7, updated = now() "
+                                  "WHERE id = %8;";
 
 }
 
@@ -325,6 +329,7 @@ void GoodsEntryExit::connectWidgets()
             m_pbDeleteItem->setEnabled(true);
         }
     });
+    connect(m_pbSaveDoc, &QPushButton::clicked, this, &GoodsEntryExit::saveDoc);
 
 
     for(int i = 0 ; i < m_vItemWidgets.size() ; i++)
@@ -504,18 +509,18 @@ void GoodsEntryExit::editItem()
         m_cbShoe->setCurrentIndex(m_cbShoe->findText(q.value(EEditItem::shoe).toString()));
         m_leSize->setValue(q.value(EEditItem::size).toInt());
         m_leQuantity->setValue(q.value(EEditItem::quantity).toInt());
-        m_leEntryPrice->setValue(q.value(EEditItem::entryPrice).toDouble());
+        m_leEntryPrice->setValue(q.value(EEditItem::entry_price).toDouble());
         m_leRebate->setValue(q.value(EEditItem::rebate).toDouble());
-        m_leRebatePct->setValue(q.value(EEditItem::rebatePct).toDouble());
-        m_lePrcAfterRebate->setValue(q.value(EEditItem::priceAfterRebate).toDouble());
+        m_leRebatePct->setValue(q.value(EEditItem::rebate_pct).toDouble());
+        m_lePrcAfterRebate->setValue(q.value(EEditItem::price_after_rebate).toDouble());
         m_leTax->setValue(q.value(EEditItem::tax).toDouble());
-        m_leTaxPct->setValue(q.value(EEditItem::taxPct).toDouble());
+        m_leTaxPct->setValue(q.value(EEditItem::tax_pct).toDouble());
         m_leMargin->setValue(q.value(EEditItem::margin).toDouble());
         m_leMarginPct->setValue(q.value(EEditItem::marginPct).toDouble());
         m_leDiscount->setValue(q.value(EEditItem::discount).toDouble());
-        m_leDiscountPct->setValue(q.value(EEditItem::discountPct).toDouble());
-        m_lePriceDiff->setValue(q.value(EEditItem::priceDiff).toDouble());
-        m_leSalePrice->setValue(q.value(EEditItem::salePrice).toDouble());
+        m_leDiscountPct->setValue(q.value(EEditItem::discoun_pct).toDouble());
+        m_lePriceDiff->setValue(q.value(EEditItem::price_diff).toDouble());
+        m_leSalePrice->setValue(q.value(EEditItem::sale_price).toDouble());
         showHideItemWidgets(false);
     }
 
@@ -534,6 +539,31 @@ void GoodsEntryExit::deleteItem()
         } else {
             qCritical()<<"Last query: "<<q.lastQuery()<<"\nLast error: "<<q.lastError();
         }
+    }
+}
+
+void GoodsEntryExit::saveDoc()
+{
+    double entryPrice = 0;
+    double rebate = 0;
+    double tax = 0;
+    double salePrice = 0;
+    double priceDiff = 0;
+
+    for(int i = 0 ; i < m_model->rowCount() ; i++)
+    {
+        int iQuantity = m_model->index(i, GoodsEntryExit_NS::quantity).data().toInt();
+        entryPrice += m_model->index(i, GoodsEntryExit_NS::entry_price).data().toDouble() * iQuantity;
+        rebate += m_model->index(i, GoodsEntryExit_NS::rebate).data().toDouble() * iQuantity;
+        tax += m_model->index(i, GoodsEntryExit_NS::tax).data().toDouble() * iQuantity;
+        salePrice += m_model->index(i, GoodsEntryExit_NS::sale_price).data().toDouble() * iQuantity;
+        priceDiff += m_model->index(i, GoodsEntryExit_NS::price_diff).data().toDouble() * iQuantity;
+    }
+
+    QSqlQuery q;
+    if(!q.exec(Q_SAVE_DOC.arg(entryPrice).arg(rebate).arg(tax).arg(salePrice).arg(priceDiff).arg(m_docId)))
+    {
+        QMessageBox::critical(this, MSG_ERROR, ERR_CONTACT_ADMINISTRATOR);
     }
 }
 

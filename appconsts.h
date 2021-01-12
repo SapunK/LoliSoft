@@ -40,6 +40,7 @@ extern const char* ENTRY_EXIT_GOODS;
 extern const char* DATE;
 extern const char* DATE_FORMAT;
 extern const char* SHOES;
+extern const char* VIEW_DOCUMENTS;
 
 ///DIMENSIONS
 extern const char* PB_FONTSIZE;

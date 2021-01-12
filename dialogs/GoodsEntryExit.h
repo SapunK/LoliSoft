@@ -12,23 +12,26 @@ class QSqlQueryModel;
 class CustomDoubleLE;
 class CustomIntLE;
 
+namespace GoodsEntryExit_NS {
 enum EEditItem{
     shoe,
     size,
     quantity,
-    entryPrice,
+    entry_price,
     rebate,
-    rebatePct,
-    priceAfterRebate,
+    rebate_pct,
+    price_after_rebate,
     tax,
-    taxPct,
+    tax_pct,
     margin,
     marginPct,
     discount,
-    discountPct,
-    priceDiff,
-    salePrice
+    discoun_pct,
+    price_diff,
+    sale_price,
+    sum_value
 };
+}
 
 class GoodsEntryExit : public QDialog
 {
@@ -90,6 +93,7 @@ private slots:
     void insertUpdateItem();
     void editItem();
     void deleteItem();
+    void saveDoc();
 };
 
 

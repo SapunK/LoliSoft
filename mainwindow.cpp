@@ -19,6 +19,7 @@
 #include "custom_widgets/CustomTableView.h"
 #include "GoodsEntryExit.h"
 #include "ShoesBox.h"
+#include "ViewDocuments.h"
 
 namespace MainWindow_NS {
 #ifdef QT_DEBUG
@@ -63,6 +64,7 @@ void MainWindow::setupForm()
     m_pbMaterials = new QPushButton(MATERIALS, this);
     m_pbShoes = new QPushButton(SHOES, this);
     m_pbEntryExitGoods = new QPushButton(ENTRY_EXIT_GOODS, this);
+    m_pbViewDocuments = new QPushButton(VIEW_DOCUMENTS, this);
 
     foreach(QPushButton* pb, findChildren<QPushButton*>()){
         HelperFunctions::setWidgetProperties(*pb);
@@ -90,6 +92,7 @@ void MainWindow::setupForm()
     vLayoutButtons->addWidget(m_pbModels);
     vLayoutButtons->addWidget(m_pbShoes);
     vLayoutButtons->addWidget(m_pbEntryExitGoods);
+    vLayoutButtons->addWidget(m_pbViewDocuments);
     vLayoutButtons->addSpacerItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 #ifdef QT_DEBUG
     //For testing purposes
@@ -186,6 +189,10 @@ void MainWindow::connectWidgets()
     connect(m_pbEntryExitGoods, &QAbstractButton::clicked, this, [this]{
        GoodsEntryExit *box = new GoodsEntryExit(this);
        box->show();
+    });
+    connect(m_pbViewDocuments, &QAbstractButton::clicked, this, [this]{
+        ViewDocuments *box = new ViewDocuments(this);
+        box->show();
     });
 }
 
